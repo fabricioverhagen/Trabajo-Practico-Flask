@@ -1,0 +1,71 @@
+/* AdminLTE ya incluye la mayoría de estilos, pero aquí van tus personalizaciones */
+
+/* Estilos personalizados para el dashboard */
+.brand-image {
+    opacity: 0.8;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.small-box .inner h3 {
+    font-size: 38px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    white-space: nowrap;
+    padding: 0;
+}
+
+.info-box:hover {
+    transform: translateY(-2px);
+    transition: all 0.3s ease;
+}
+
+/* Estilos para el gráfico */
+#ventasChart {
+    max-height: 400px;
+}
+
+/* Personalización de tablas */
+.table-sm th,
+.table-sm td {
+    padding: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Badges personalizados */
+.badge-danger {
+    background-color: #dc3545;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+}
+
+/* Cards hover effect */
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+/* Small boxes responsive */
+@media (max-width: 768px) {
+    .small-box .inner h3 {
+        font-size: 28px;
+    }
+    
+    .small-box .inner p {
+        font-size: 14px;
+    }
+}
+
+/* Info boxes responsive */
+@media (max-width: 576px) {
+    .info-box {
+        margin-bottom: 1rem;
+    }
+}
