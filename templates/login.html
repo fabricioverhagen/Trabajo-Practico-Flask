@@ -19,7 +19,7 @@
             <div class="card-body">
                 <p class="login-box-msg">Inicia sesión para comenzar</p>
 
-                <form action="#" method="post">
+                <form action="{{ url_for('login') }}" method="post">
                     <div class="input-group mb-3">
                         <input type="email" class="form-control" name="email" placeholder="Email" required>
                         <div class="input-group-append">
