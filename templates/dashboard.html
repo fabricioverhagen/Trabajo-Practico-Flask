@@ -4,6 +4,7 @@
     <title>Dashboard</title>
 </head>
 <body>
-    <h1>Bienvenido al Dashboard</h1>
+    <h2>Bienvenido, {{ nombre }}</h2>
+    <a href="{{ url_for('login') }}">Cerrar sesión</a>
 </body>
 </html>

@@ -1,15 +1,68 @@
-from flask import Flask, render_template
+from flask import Flask, render_template,request,redirect,url_for,session,flash
+import sqlite3
+
 
 app = Flask(__name__)
+app.secret_key = "admin"
 
+def get_db_connection():
+    conn = sqlite3.connect('basededatosflask.db')
+    conn.row_factory = sqlite3.Row
+    return conn
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        nombre = request.form["nombre"]
+        email = request.form["email"]
+        password = request.form["password"]
+        rol = "usuario"
+
+        conn = get_db_connection()
+        try:
+            conn.execute(
+                "INSERT INTO usuarios (nombre, email, password, rol) VALUES (?, ?, ?, ?)",
+                (nombre, email, password, rol)
+            )
+            conn.commit()
+            flash("Registro exitoso. Ahora puedes iniciar sesión.", "success")
+            return redirect(url_for("login"))
+        except sqlite3.IntegrityError:
+            flash("El correo electrónico ya está registrado.", "danger")
+        finally:
+            conn.close()
+    return render_template("register.html")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+        user = conn.execute(
+            "SELECT * FROM usuarios WHERE email = ? AND password = ?",
+            (email, password)
+        ).fetchone()
+        conn.close()
+
+        if user:
+            session["user"] = user["nombre"]
+            return redirect(url_for("dashboard"))
+        else:
+            flash("Email o contraseña incorrectos.", "danger")
+
     return render_template("login.html")
+
+
 
 @app.route('/dashboard',methods=['GET'])
 def dashboard():
-    return render_template('dashboard.html')
+    if "user" in session:
+        return render_template("dashboard.html", nombre=session["user"])
+    else:
+        flash("Debes iniciar sesión para acceder al dashboard.", "warning")
+        return redirect(url_for("login"))
 
 @app.route('/dashboard/gestion_clientes', methods=['GET'])
 def gestion_clientes():
@@ -30,3 +83,6 @@ def listado_facturas():
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+if __name__ == "__main__":
+    app.run(debug=True)
