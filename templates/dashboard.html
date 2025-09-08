@@ -1,9 +1,600 @@
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>Dashboard</title>
-</head>
-<body>
-    <h1>Bienvenido al Dashboard</h1>
-</body>
+    <!-- 1. Google Fonts (opcional pero recomendado) -->
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"
+    />
+
+    <!-- 2. Font Awesome (iconos) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+
+    <!-- 3. AdminLTE CSS (va AL FINAL del head) -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css"
+    />
+  </head>
+
+  <body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+      <!-- Navbar -->
+      <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" data-widget="pushmenu" href="#" role="button"
+              ><i class="fas fa-bars"></i
+            ></a>
+          </li>
+          <li class="nav-item d-none d-sm-inline-block">
+            <a href="#" class="nav-link">Inicio</a>
+          </li>
+        </ul>
+
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link" data-toggle="dropdown" href="#">
+              <i class="fas fa-user"></i> Admin
+            </a>
+            <div class="dropdown-menu dropdown-menu-right">
+              <a href="#" class="dropdown-item">
+                <i class="fas fa-user mr-2"></i> Perfil
+              </a>
+              <div class="dropdown-divider"></div>
+              <a href="#" class="dropdown-item">
+                <i class="fas fa-sign-out-alt mr-2"></i> Salir
+              </a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+      <!-- Main Sidebar -->
+      <aside class="main-sidebar sidebar-dark-primary elevation-4">
+        <a href="#" class="brand-link">
+          <i
+            class="fas fa-store brand-image img-circle elevation-3"
+            style="opacity: 0.8; margin-left: 10px; margin-right: 10px"
+          ></i>
+          <span class="brand-text font-weight-light">Mi Kiosco</span>
+        </a>
+
+        <div class="sidebar">
+          <nav class="mt-2">
+            <ul
+              class="nav nav-pills nav-sidebar flex-column"
+              data-widget="treeview"
+              role="menu"
+              data-accordion="false"
+            >
+              <li class="nav-item">
+                <a href="#" class="nav-link active">
+                  <i class="nav-icon fas fa-tachometer-alt"></i>
+                  <p>Dashboard</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-cash-register"></i>
+                  <p>Nueva Venta</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-box"></i>
+                  <p>Productos</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-users"></i>
+                  <p>Clientes</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-file-invoice"></i>
+                  <p>Facturas</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-chart-bar"></i>
+                  <p>Reportes</p>
+                </a>
+              </li>
+
+              <li class="nav-item">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon fas fa-cog"></i>
+                  <p>Configuración</p>
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Content Wrapper -->
+      <div class="content-wrapper">
+        <!-- Content Header -->
+        <div class="content-header">
+          <div class="container-fluid">
+            <div class="row mb-2">
+              <div class="col-sm-6">
+                <h1 class="m-0">Dashboard</h1>
+              </div>
+              <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-right">
+                  <li class="breadcrumb-item active">Dashboard</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <section class="content">
+          <div class="container-fluid">
+            <!-- Resumen de Ventas del Día -->
+            <div class="row">
+              <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                  <div class="inner">
+                    <h3>24</h3>
+                    <p>Ventas Hoy</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-shopping-cart"></i>
+                  </div>
+                  <a href="#" class="small-box-footer"
+                    >Ver todas <i class="fas fa-arrow-circle-right"></i
+                  ></a>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                  <div class="inner">
+                    <h3>$12,450</h3>
+                    <p>Total del Día</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-dollar-sign"></i>
+                  </div>
+                  <a href="#" class="small-box-footer"
+                    >Ver detalles <i class="fas fa-arrow-circle-right"></i
+                  ></a>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-6">
+                <div class="small-box bg-warning">
+                  <div class="inner">
+                    <h3 style="color: white">156</h3>
+                    <p style="color: white">Productos en Stock</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-cubes"></i>
+                  </div>
+                  <a href="#" class="small-box-footer" style="color: white"
+                    >Administrar <i class="fas fa-arrow-circle-right"></i
+                  ></a>
+                </div>
+              </div>
+
+              <div class="col-lg-3 col-6">
+                <div class="small-box bg-danger">
+                  <div class="inner">
+                    <h3>8</h3>
+                    <p>Stock Bajo</p>
+                  </div>
+                  <div class="icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                  </div>
+                  <a href="#" class="small-box-footer"
+                    >Ver productos <i class="fas fa-arrow-circle-right"></i
+                  ></a>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- Gráfico de Ventas -->
+              <div class="col-md-8">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i class="fas fa-chart-line mr-1"></i>
+                      Ventas de los Últimos 7 Días
+                    </h3>
+                    <div class="card-tools">
+                      <button
+                        type="button"
+                        class="btn btn-tool"
+                        data-card-widget="collapse"
+                      >
+                        <i class="fas fa-minus"></i>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="card-body">
+                    <canvas id="ventasChart" height="100"></canvas>
+                  </div>
+                </div>
+              </div>
+              <!-- Productos Más Vendidos -->
+              <div class="col-md-4">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i class="fas fa-trophy mr-1"></i>
+                      Top Productos
+                    </h3>
+                  </div>
+                  <div class="card-body p-0">
+                    <ul class="products-list product-list-in-card pl-2 pr-2">
+                      <li class="item">
+                        <div class="product-img">
+                          <i class="fas fa-cookie-bite fa-2x text-warning"></i>
+                        </div>
+                        <div class="product-info">
+                          <a href="#" class="product-title"
+                            >Galletitas Oreo
+                            <span class="badge badge-info float-right"
+                              >42 vendidas</span
+                            ></a
+                          >
+                          <span class="product-description">$350 c/u</span>
+                        </div>
+                      </li>
+                      <li class="item">
+                        <div class="product-img">
+                          <i class="fas fa-wine-bottle fa-2x text-primary"></i>
+                        </div>
+                        <div class="product-info">
+                          <a href="#" class="product-title"
+                            >Coca Cola 500ml
+                            <span class="badge badge-info float-right"
+                              >38 vendidas</span
+                            ></a
+                          >
+                          <span class="product-description">$280 c/u</span>
+                        </div>
+                      </li>
+                      <li class="item">
+                        <div class="product-img">
+                          <i class="fas fa-bread-slice fa-2x text-success"></i>
+                        </div>
+                        <div class="product-info">
+                          <a href="#" class="product-title"
+                            >Pan Lactal
+                            <span class="badge badge-info float-right"
+                              >31 vendidas</span
+                            ></a
+                          >
+                          <span class="product-description">$420 c/u</span>
+                        </div>
+                      </li>
+                      <li class="item">
+                        <div class="product-img">
+                          <i class="fas fa-candy-cane fa-2x text-danger"></i>
+                        </div>
+                        <div class="product-info">
+                          <a href="#" class="product-title"
+                            >Caramelos Sugus
+                            <span class="badge badge-info float-right"
+                              >28 vendidas</span
+                            ></a
+                          >
+                          <span class="product-description">$120 c/u</span>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="card-footer text-center">
+                    <a href="#" class="uppercase">Ver Todos los Productos</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="row">
+              <!-- Productos con Stock Bajo -->
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i
+                        class="fas fa-exclamation-triangle mr-1 text-warning"
+                      ></i>
+                      Productos con Stock Bajo
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>Producto</th>
+                            <th>Stock Actual</th>
+                            <th>Mínimo</th>
+                            <th>Estado</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>Leche La Serenísima 1L</td>
+                            <td>3</td>
+                            <td>10</td>
+                            <td>
+                              <span class="badge badge-danger">Crítico</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Yogur Ser 1L</td>
+                            <td>5</td>
+                            <td>15</td>
+                            <td>
+                              <span class="badge badge-warning">Bajo</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Manteca La Paulina</td>
+                            <td>2</td>
+                            <td>8</td>
+                            <td>
+                              <span class="badge badge-danger">Crítico</span>
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>Papel Higiénico Elite</td>
+                            <td>6</td>
+                            <td>12</td>
+                            <td>
+                              <span class="badge badge-warning">Bajo</span>
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <a href="#" class="btn btn-sm btn-info">
+                      <i class="fas fa-plus"></i> Reabastecer
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Últimas Ventas -->
+              <div class="col-md-6">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i class="fas fa-clock mr-1"></i>
+                      Últimas Ventas
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="table-responsive">
+                      <table class="table table-sm">
+                        <thead>
+                          <tr>
+                            <th>Factura #</th>
+                            <th>Cliente</th>
+                            <th>Total</th>
+                            <th>Hora</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <td>#001547</td>
+                            <td>Juan Pérez</td>
+                            <td>$840</td>
+                            <td>14:32</td>
+                          </tr>
+                          <tr>
+                            <td>#001546</td>
+                            <td>María García</td>
+                            <td>$1,250</td>
+                            <td>14:15</td>
+                          </tr>
+                          <tr>
+                            <td>#001545</td>
+                            <td>Cliente Ocasional</td>
+                            <td>$320</td>
+                            <td>13:58</td>
+                          </tr>
+                          <tr>
+                            <td>#001544</td>
+                            <td>Carlos López</td>
+                            <td>$2,180</td>
+                            <td>13:45</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  <div class="card-footer">
+                    <a href="#" class="btn btn-sm btn-success">
+                      <i class="fas fa-plus"></i> Nueva Venta
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Accesos Rápidos -->
+            <div class="row">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-header">
+                    <h3 class="card-title">
+                      <i class="fas fa-bolt mr-1"></i>
+                      Accesos Rápidos
+                    </h3>
+                  </div>
+                  <div class="card-body">
+                    <div class="row">
+                      <div class="col-md-2 col-sm-4 col-6">
+                        <div class="info-box bg-gradient-success">
+                          <span class="info-box-icon"
+                            ><i class="fas fa-cash-register"></i
+                          ></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">Nueva</span>
+                            <span class="info-box-number">Venta</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2 col-sm-4 col-6">
+                        <div class="info-box bg-gradient-info">
+                          <span class="info-box-icon"
+                            ><i class="fas fa-plus"></i
+                          ></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">Nuevo</span>
+                            <span class="info-box-number">Producto</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2 col-sm-4 col-6">
+                        <div class="info-box bg-gradient-warning">
+                          <span class="info-box-icon"
+                            ><i class="fas fa-user-plus"></i
+                          ></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">Nuevo</span>
+                            <span class="info-box-number">Cliente</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2 col-sm-4 col-6">
+                        <div class="info-box bg-gradient-danger">
+                          <span class="info-box-icon"
+                            ><i class="fas fa-chart-bar"></i
+                          ></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">Ver</span>
+                            <span class="info-box-number">Reportes</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2 col-sm-4 col-6">
+                        <div class="info-box bg-gradient-purple">
+                          <span class="info-box-icon"
+                            ><i class="fas fa-file-export"></i
+                          ></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">Exportar</span>
+                            <span class="info-box-number">Datos</span>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="col-md-2 col-sm-4 col-6">
+                        <div class="info-box bg-gradient-secondary">
+                          <span class="info-box-icon"
+                            ><i class="fas fa-cog"></i
+                          ></span>
+                          <div class="info-box-content">
+                            <span class="info-box-text">Config</span>
+                            <span class="info-box-number">Sistema</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- Footer -->
+      <footer class="main-footer">
+        <strong>&copy; 2025 <a href="#">Sistema Facturación Kiosco</a>.</strong>
+        Desarrollado con Flask y AdminLTE.
+        <div class="float-right d-none d-sm-inline-block">
+          <b>Versión</b> 1.0.0
+        </div>
+      </footer>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <!-- Bootstrap 4 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+    <!-- AdminLTE App -->
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+    <script>
+      // Gráfico de Ventas
+      const ctx = document.getElementById("ventasChart").getContext("2d");
+      const ventasChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"],
+          datasets: [
+            {
+              label: "Ventas ($)",
+              data: [8500, 12300, 9800, 15400, 11200, 18600, 12450],
+              borderColor: "rgb(75, 192, 192)",
+              backgroundColor: "rgba(75, 192, 192, 0.1)",
+              tension: 0.4,
+              fill: true,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: false,
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              ticks: {
+                callback: function (value) {
+                  return "$" + value.toLocaleString();
+                },
+              },
+            },
+          },
+        },
+      });
+
+      // Actualizar la hora cada segundo
+      function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString();
+        // Si tienes algún elemento para mostrar la hora, aquí se actualizaría
+      }
+
+      // Actualizar cada segundo
+      setInterval(updateTime, 1000);
+
+      // Efectos hover para las cards de accesos rápidos
+      $(".info-box").hover(
+        function () {
+          $(this).addClass("elevation-3");
+        },
+        function () {
+          $(this).removeClass("elevation-3");
+        }
+      );
+    </script>
+  </body>
 </html>
