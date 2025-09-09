@@ -1,9 +1,42 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Gestión de Clientes</title>
-</head>
-<body>
-    <h1>Gestión de Clientes</h1>
-</body>
-</html>
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">Listado de Clientes</h3>
+        <div class="card-tools">
+            <a href="{{ url_for('agregar_clientes') }}" class="btn btn-primary"><i class="fas fa-plus"></i> Nuevo Cliente</a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Teléfono</th>
+                    <th>Dirección</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for c in clientes %}
+                <tr>
+                    <td>{{ c.id_cliente }}</td>
+                    <td>{{ c.nombre }}</td>
+                    <td>{{ c.email }}</td>
+                    <td>{{ c.telefono }}</td>
+                    <td>{{ c.direccion }}</td>
+                    <td>
+                        <a href="{{ url_for('editar_cliente', id=c.id_cliente) }}" class="btn btn-warning btn-sm"><i class="fas fa-edit"></i> Editar</a>
+                        <form action="{{ url_for('eliminar_cliente', id=c.id_cliente) }}" method="post" style="display:inline;">
+                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Estás seguro de que quieres eliminar este cliente?');"><i class="fas fa-trash"></i> Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

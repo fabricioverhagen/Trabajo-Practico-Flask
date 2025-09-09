@@ -19,7 +19,7 @@
             <div class="card-body">
                 <p class="login-box-msg">Registrar una nueva cuenta</p>
 
-                <form action="#" method="post">
+                <form action="{{ url_for('register') }}" method="post">
                     <div class="input-group mb-3">
                         <input type="text" class="form-control" name="nombre" placeholder="Nombre completo" required>
                         <div class="input-group-append">
