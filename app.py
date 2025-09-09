@@ -7,14 +7,21 @@ app = Flask(__name__)
 app.secret_key = "admin"
 
 def get_db_connection():
+<<<<<<< HEAD
     # Esto busca en la carpeta del proyect
+=======
+    # Esto busca en la carpeta del proyecto
+>>>>>>> 2c2a13a14f46f46fce3692e1ee0ec2fccade3837
     db_path = os.path.join(os.path.dirname(__file__), 'basededatosflask.db')
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
 
+<<<<<<< HEAD
 #----------------------------------------------------- Autenticacion ------------------------------------------------------
 
+=======
+>>>>>>> 2c2a13a14f46f46fce3692e1ee0ec2fccade3837
 @app.route("/")
 def home():
     return redirect(url_for("login"))
