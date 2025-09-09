@@ -7,21 +7,75 @@ app = Flask(__name__)
 app.secret_key = "admin"
 
 def get_db_connection():
-<<<<<<< HEAD
-    # Esto busca en la carpeta del proyect
-=======
     # Esto busca en la carpeta del proyecto
->>>>>>> 2c2a13a14f46f46fce3692e1ee0ec2fccade3837
     db_path = os.path.join(os.path.dirname(__file__), 'basededatosflask.db')
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
 
-<<<<<<< HEAD
+#----------------------------------------------------- Funciones dashboard ------------------------------------------------------
+def get_dashboard_data():
+    """Obtiene datos reales para el dashboard"""
+    conn = get_db_connection()
+    
+    stats = {
+        'ventas_hoy': 0,
+        'total_dia': 0,
+        'productos_stock': 0,
+        'stock_bajo': 0,
+        'total_clientes': 0
+    }
+    
+    try:
+        # Contar clientes totales
+        stats['total_clientes'] = conn.execute('SELECT COUNT(*) as count FROM clientes').fetchone()['count']
+        
+        # Productos con stock
+        try:
+            stats['productos_stock'] = conn.execute('SELECT COUNT(*) as count FROM productos WHERE stock > 0').fetchone()['count']
+            stats['stock_bajo'] = conn.execute('SELECT COUNT(*) as count FROM productos WHERE stock <= 5 AND stock > 0').fetchone()['count']
+        except:
+            stats['productos_stock'] = 0
+            stats['stock_bajo'] = 0
+            
+    except Exception as e:
+        print(f"Error obteniendo estadísticas: {e}")
+    finally:
+        conn.close()
+    
+    return stats
+
+def get_productos_stock_bajo():
+    """Obtiene productos con stock bajo"""
+    conn = get_db_connection()
+    productos = []
+    
+    try:
+        query = '''
+        SELECT descripcion, stock, 5 as stock_minimo,
+               CASE 
+                   WHEN stock <= 2 THEN 'Crítico'
+                   WHEN stock <= 5 THEN 'Bajo'
+                   ELSE 'Normal'
+               END as estado
+        FROM productos 
+        WHERE stock <= 5
+        ORDER BY stock ASC
+        LIMIT 10
+        '''
+        productos = conn.execute(query).fetchall()
+    except Exception as e:
+        print(f"Error obteniendo productos con stock bajo: {e}")
+        productos = []
+    finally:
+        conn.close()
+    
+    return productos
+
+
+
 #----------------------------------------------------- Autenticacion ------------------------------------------------------
 
-=======
->>>>>>> 2c2a13a14f46f46fce3692e1ee0ec2fccade3837
 @app.route("/")
 def home():
     return redirect(url_for("login"))
@@ -76,7 +130,15 @@ def login():
 @app.route('/dashboard',methods=['GET'])
 def dashboard():
     if "user" in session:
-        return render_template("dashboard.html", nombre=session["user"])
+        # Obtener datos reales para el dashboard
+        stats = get_dashboard_data()
+        productos_stock_bajo = get_productos_stock_bajo()
+        
+        
+        return render_template("dashboard.html", 
+                             nombre=session["user"],
+                             stats=stats,
+                             productos_stock_bajo=productos_stock_bajo)
     else:
         flash("Debes iniciar sesión para acceder al dashboard.", "warning")
         return redirect(url_for("login"))
@@ -141,11 +203,86 @@ def eliminar_cliente(id):
     # Redirige a 'gestion_clientes'
     return redirect(url_for('gestion_clientes'))
 
-#---------------------------------------------------------------------------------------------------------------------- 
+#----------------------------------------------------- Productos ------------------------------------------------------
 
 @app.route('/dashboard/gestion_productos', methods=['GET'])
 def gestion_productos():
-    return render_template('gestion_productos.html')
+    if "user" not in session:
+        flash("Debes iniciar sesión para acceder.", "warning")
+        return redirect(url_for("login"))
+    
+    conn = get_db_connection()
+    productos = conn.execute('SELECT * FROM productos ORDER BY descripcion').fetchall()
+    conn.close()
+    return render_template('gestion_productos.html', productos=productos)
+
+@app.route('/productos/agregar', methods=['POST'])
+def agregar_producto():
+    if "user" not in session:
+        flash("Debes iniciar sesión para acceder.", "warning")
+        return redirect(url_for("login"))
+    
+    descripcion = request.form['descripcion']
+    precio = float(request.form['precio'])
+    stock = int(request.form['stock'])
+
+    conn = get_db_connection()
+    try:
+        conn.execute('INSERT INTO productos (descripcion, precio, stock) VALUES (?, ?, ?)',
+                     (descripcion, precio, stock))
+        conn.commit()
+        flash('Producto agregado exitosamente', 'success')
+    except Exception as e:
+        flash(f'Error al agregar producto: {str(e)}', 'danger')
+    finally:
+        conn.close()
+    
+    return redirect(url_for('gestion_productos'))
+
+@app.route('/productos/editar/<int:id>', methods=['POST'])
+def editar_producto(id):
+    if "user" not in session:
+        flash("Debes iniciar sesión para acceder.", "warning")
+        return redirect(url_for("login"))
+    
+    descripcion = request.form['descripcion']
+    precio = float(request.form['precio'])
+    stock = int(request.form['stock'])
+
+    conn = get_db_connection()
+    try:
+        conn.execute('UPDATE productos SET descripcion = ?, precio = ?, stock = ? WHERE id_producto = ?',
+                     (descripcion, precio, stock, id))
+        conn.commit()
+        flash('Producto actualizado exitosamente', 'success')
+    except Exception as e:
+        flash(f'Error al actualizar producto: {str(e)}', 'danger')
+    finally:
+        conn.close()
+    
+    return redirect(url_for('gestion_productos'))
+
+@app.route('/productos/eliminar/<int:id>', methods=['POST'])
+def eliminar_producto(id):
+    if "user" not in session:
+        flash("Debes iniciar sesión para acceder.", "warning")
+        return redirect(url_for("login"))
+    
+    conn = get_db_connection()
+    try:
+        conn.execute("DELETE FROM productos WHERE id_producto = ?", (id,))
+        conn.commit()
+        flash("Producto eliminado correctamente", "success")
+    except Exception as e:
+        flash(f"Error al eliminar producto: {str(e)}", "danger")
+    finally:
+        conn.close()
+    
+    return redirect(url_for('gestion_productos'))
+
+#---------------------------------------------------------------------------------------------------------------------- 
+
+
 
 @app.route('/dashboard/emitir_factura', methods=['GET'])
 def emitir_factura():
