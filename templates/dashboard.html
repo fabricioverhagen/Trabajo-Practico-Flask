@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
 
-<body class="hold-transition sidebar-mini layout-fixed">
+<body class="hold-transition sidebar-mini">
     <div class="wrapper">
         <!-- Navbar -->
         <nav class="main-header navbar navbar-expand navbar-white navbar-light">
@@ -136,38 +136,38 @@
             <section class="content">
                 <div class="container-fluid">
                     
-                    <!-- Resumen de Ventas del Día -->
+                    <<!-- Resumen de Ventas del Día -->
                     <div class="row">
                         <div class="col-lg-3 col-6">
                             <div class="small-box bg-info">
                                 <div class="inner">
-                                    <h3>24</h3>
+                                    <h3>{{ stats.ventas_hoy }}</h3>
                                     <p>Ventas Hoy</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-shopping-cart"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">Ver todas <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="{{ url_for('listado_facturas') }}" class="small-box-footer">Ver todas <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
 
                         <div class="col-lg-3 col-6">
                             <div class="small-box bg-success">
                                 <div class="inner">
-                                    <h3>$12,450</h3>
+                                    <h3>${{ "%.2f"|format(stats.total_dia) }}</h3>
                                     <p>Total del Día</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-dollar-sign"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">Ver detalles <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="{{ url_for('listado_facturas') }}" class="small-box-footer">Ver detalles <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
 
                         <div class="col-lg-3 col-6">
                             <div class="small-box bg-warning">
                                 <div class="inner">
-                                    <h3 class="text-white">156</h3>
+                                    <h3 class="text-white">{{ stats.productos_stock }}</h3>
                                     <p class="text-white">Productos en Stock</p>
                                 </div>
                                 <div class="icon">
@@ -180,18 +180,16 @@
                         <div class="col-lg-3 col-6">
                             <div class="small-box bg-danger">
                                 <div class="inner">
-                                    <h3>8</h3>
+                                    <h3>{{ stats.stock_bajo }}</h3>
                                     <p>Stock Bajo</p>
                                 </div>
                                 <div class="icon">
                                     <i class="fas fa-exclamation-triangle"></i>
                                 </div>
-                                <a href="#" class="small-box-footer">Ver productos <i class="fas fa-arrow-circle-right"></i></a>
+                                <a href="{{ url_for('gestion_productos') }}" class="small-box-footer">Ver productos <i class="fas fa-arrow-circle-right"></i></a>
                             </div>
                         </div>
                     </div>
-
-                    <div class="row">
                         <!-- Gráfico de Ventas -->
                         <div class="col-md-8">
                             <div class="card">
@@ -213,6 +211,7 @@
                         </div>
 
                         <!-- Productos Más Vendidos -->
+                        <!-- Productos Más Vendidos -->
                         <div class="col-md-4">
                             <div class="card">
                                 <div class="card-header">
@@ -222,49 +221,17 @@
                                     </h3>
                                 </div>
                                 <div class="card-body p-0">
-                                    <ul class="products-list product-list-in-card pl-2 pr-2">
-                                        <li class="item">
-                                            <div class="product-img">
-                                                <i class="fas fa-cookie-bite fa-2x text-warning"></i>
-                                            </div>
-                                            <div class="product-info">
-                                                <a href="#" class="product-title">Galletitas Oreo
-                                                    <span class="badge badge-info float-right">42 vendidas</span></a>
-                                                <span class="product-description">$350 c/u</span>
-                                            </div>
-                                        </li>
-                                        <li class="item">
-                                            <div class="product-img">
-                                                <i class="fas fa-wine-bottle fa-2x text-primary"></i>
-                                            </div>
-                                            <div class="product-info">
-                                                <a href="#" class="product-title">Coca Cola 500ml
-                                                    <span class="badge badge-info float-right">38 vendidas</span></a>
-                                                <span class="product-description">$280 c/u</span>
-                                            </div>
-                                        </li>
-                                        <li class="item">
-                                            <div class="product-img">
-                                                <i class="fas fa-bread-slice fa-2x text-success"></i>
-                                            </div>
-                                            <div class="product-info">
-                                                <a href="#" class="product-title">Pan Lactal
-                                                    <span class="badge badge-info float-right">31 vendidas</span></a>
-                                                <span class="product-description">$420 c/u</span>
-                                            </div>
-                                        </li>
-                                        <li class="item">
-                                            <div class="product-img">
-                                                <i class="fas fa-candy-cane fa-2x text-danger"></i>
-                                            </div>
-                                            <div class="product-info">
-                                                <a href="#" class="product-title">Caramelos Sugus
-                                                    <span class="badge badge-info float-right">28 vendidas</span></a>
-                                                <span class="product-description">$120 c/u</span>
-                                            </div>
-                                        </li>
-                                    </ul>
+                                    <div class="p-3 text-center text-muted">
+                                        <i class="fas fa-box fa-3x mb-3"></i>
+                                        <p>Aún no hay datos de ventas</p>
+                                        <small>Los productos más vendidos aparecerán aquí cuando tengas ventas registradas</small>
+                                    </div>
                                 </div>
+                                <div class="card-footer text-center">
+                                    <a href="{{ url_for('gestion_productos') }}" class="uppercase">Ver Todos los Productos</a>
+                                </div>
+                            </div>
+                        </div>
                                 <div class="card-footer text-center">
                                     <a href="{{ url_for('gestion_productos') }}" class="uppercase">Ver Todos los Productos</a>
                                 </div>
@@ -273,6 +240,7 @@
                     </div>
 
                     <div class="row">
+                        <!-- Productos con Stock Bajo -->
                         <!-- Productos con Stock Bajo -->
                         <div class="col-md-6">
                             <div class="card">
@@ -283,48 +251,43 @@
                                     </h3>
                                 </div>
                                 <div class="card-body">
+                                    {% if productos_stock_bajo %}
                                     <div class="table-responsive">
                                         <table class="table table-sm">
                                             <thead>
                                                 <tr>
                                                     <th>Producto</th>
                                                     <th>Stock Actual</th>
-                                                    <th>Mínimo</th>
                                                     <th>Estado</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                {% for producto in productos_stock_bajo %}
                                                 <tr>
-                                                    <td>Leche La Serenísima 1L</td>
-                                                    <td>3</td>
-                                                    <td>10</td>
-                                                    <td><span class="badge badge-danger">Crítico</span></td>
+                                                    <td>{{ producto.descripcion }}</td>
+                                                    <td>{{ producto.stock }}</td>
+                                                    <td>
+                                                        {% if producto.estado == 'Crítico' %}
+                                                        <span class="badge badge-danger">Crítico</span>
+                                                        {% else %}
+                                                        <span class="badge badge-warning">Bajo</span>
+                                                        {% endif %}
+                                                    </td>
                                                 </tr>
-                                                <tr>
-                                                    <td>Yogur Ser 1L</td>
-                                                    <td>5</td>
-                                                    <td>15</td>
-                                                    <td><span class="badge badge-warning">Bajo</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Manteca La Paulina</td>
-                                                    <td>2</td>
-                                                    <td>8</td>
-                                                    <td><span class="badge badge-danger">Crítico</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Papel Higiénico Elite</td>
-                                                    <td>6</td>
-                                                    <td>12</td>
-                                                    <td><span class="badge badge-warning">Bajo</span></td>
-                                                </tr>
+                                                {% endfor %}
                                             </tbody>
                                         </table>
                                     </div>
+                                    {% else %}
+                                    <div class="text-center text-muted py-3">
+                                        <i class="fas fa-check-circle fa-2x text-success mb-2"></i>
+                                        <p class="mb-0">Todos los productos tienen stock suficiente</p>
+                                    </div>
+                                    {% endif %}
                                 </div>
                                 <div class="card-footer">
                                     <a href="{{ url_for('gestion_productos') }}" class="btn btn-sm btn-info">
-                                        <i class="fas fa-plus"></i> Reabastecer
+                                        <i class="fas fa-boxes"></i> Gestionar Stock
                                     </a>
                                 </div>
                             </div>
@@ -340,43 +303,10 @@
                                     </h3>
                                 </div>
                                 <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-sm">
-                                            <thead>
-                                                <tr>
-                                                    <th>Factura #</th>
-                                                    <th>Cliente</th>
-                                                    <th>Total</th>
-                                                    <th>Hora</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>#001547</td>
-                                                    <td>Juan Pérez</td>
-                                                    <td>$840</td>
-                                                    <td>14:32</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>#001546</td>
-                                                    <td>María García</td>
-                                                    <td>$1,250</td>
-                                                    <td>14:15</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>#001545</td>
-                                                    <td>Cliente Ocasional</td>
-                                                    <td>$320</td>
-                                                    <td>13:58</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>#001544</td>
-                                                    <td>Carlos López</td>
-                                                    <td>$2,180</td>
-                                                    <td>13:45</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <div class="text-center text-muted py-4">
+                                        <i class="fas fa-receipt fa-3x mb-3"></i>
+                                        <h5 class="text-muted">No hay ventas registradas</h5>
+                                        <p class="text-muted mb-0">Las ventas aparecerán aquí cuando implementes el sistema de facturación</p>
                                     </div>
                                 </div>
                                 <div class="card-footer">
