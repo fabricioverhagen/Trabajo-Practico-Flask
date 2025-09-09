@@ -2,8 +2,252 @@
 <html>
 <head>
     <title>Gestión de Productos</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
 </head>
-<body>
-    <h1>Gestión de Productos</h1>
+
+<body class="hold-transition sidebar-mini layout-fixed">
+    <div class="wrapper">
+        <!-- Navbar -->
+        <nav class="main-header navbar navbar-expand navbar-white navbar-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" data-widget="pushmenu" href="#" role="button">
+                        <i class="fas fa-bars"></i>
+                    </a>
+                </li>
+                <li class="nav-item d-none d-sm-inline-block">
+                    <a href="{{ url_for('dashboard') }}" class="nav-link">Dashboard</a>
+                </li>
+            </ul>
+            
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item dropdown">
+                    <a class="nav-link" data-toggle="dropdown" href="#">
+                        <i class="fas fa-user"></i> {{ session['user'] }}
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right">
+                        <a href="{{ url_for('login') }}" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt mr-2"></i> Cerrar Sesión
+                        </a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Sidebar -->
+        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+            <a href="{{ url_for('dashboard') }}" class="brand-link">
+                <i class="fas fa-store brand-image img-circle elevation-3"></i>
+                <span class="brand-text font-weight-light">Mi Kiosco</span>
+            </a>
+
+            <div class="sidebar">
+                <nav class="mt-2">
+                    <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                        <li class="nav-item">
+                            <a href="{{ url_for('dashboard') }}" class="nav-link">
+                                <i class="nav-icon fas fa-tachometer-alt"></i>
+                                <p>Dashboard</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('gestion_productos') }}" class="nav-link active">
+                                <i class="nav-icon fas fa-box"></i>
+                                <p>Productos</p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('gestion_clientes') }}" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>Clientes</p>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </aside>
+
+        <!-- Content Wrapper -->
+        <div class="content-wrapper">
+            <!-- Content Header -->
+            <div class="content-header">
+                <div class="container-fluid">
+                    <div class="row mb-2">
+                        <div class="col-sm-6">
+                            <h1 class="m-0">Gestión de Productos</h1>
+                        </div>
+                        <div class="col-sm-6">
+                            <ol class="breadcrumb float-sm-right">
+                                <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
+                                <li class="breadcrumb-item active">Productos</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <section class="content">
+                <div class="container-fluid">
+                    
+                    <!-- Mensajes Flash -->
+                    {% with messages = get_flashed_messages(with_categories=true) %}
+                        {% if messages %}
+                            {% for category, message in messages %}
+                                <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                                    {{ message }}
+                                    <button type="button" class="close" data-dismiss="alert">
+                                        <span>&times;</span>
+                                    </button>
+                                </div>
+                            {% endfor %}
+                        {% endif %}
+                    {% endwith %}
+
+                    <!-- Botón Agregar Producto -->
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modalProducto">
+                                <i class="fas fa-plus"></i> Agregar Producto
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Productos -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class="card-title">
+                                        <i class="fas fa-list mr-1"></i>
+                                        Lista de Productos
+                                    </h3>
+                                </div>
+                                <div class="card-body">
+                                    {% if productos %}
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>Descripción</th>
+                                                    <th>Precio</th>
+                                                    <th>Stock</th>
+                                                    <th>Estado Stock</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for producto in productos %}
+                                                <tr>
+                                                    <td>{{ producto.id_producto }}</td>
+                                                    <td>{{ producto.descripcion }}</td>
+                                                    <td>${{ "%.2f"|format(producto.precio) }}</td>
+                                                    <td>{{ producto.stock }}</td>
+                                                    <td>
+                                                        {% if producto.stock == 0 %}
+                                                            <span class="badge badge-danger">Sin Stock</span>
+                                                        {% elif producto.stock <= 5 %}
+                                                            <span class="badge badge-warning">Stock Bajo</span>
+                                                        {% else %}
+                                                            <span class="badge badge-success">Disponible</span>
+                                                        {% endif %}
+                                                    </td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-info" onclick="editarProducto('{{ producto.id_producto }}', '{{ producto.descripcion }}', '{{ producto.precio }}', '{{ producto.stock }}')">
+                                                            <i class="fas fa-edit"></i> Editar
+                                                        </button>
+                                                        <form method="POST" action="{{ url_for('eliminar_producto', id=producto.id_producto) }}" style="display: inline;">
+                                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar este producto?')">
+                                                                <i class="fas fa-trash"></i> Eliminar
+                                                            </button>
+                                                        </form>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
+                                    <div class="text-center py-4">
+                                        <i class="fas fa-box fa-3x text-muted mb-3"></i>
+                                        <h4 class="text-muted">No hay productos registrados</h4>
+                                        <p class="text-muted">Comienza agregando tu primer producto</p>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Modal Agregar/Editar Producto -->
+    <div class="modal fade" id="modalProducto" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Agregar Producto</h4>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form id="formProducto" method="POST" action="{{ url_for('agregar_producto') }}">
+                    <div class="modal-body">
+                        <input type="hidden" id="producto_id" name="producto_id">
+                        <div class="form-group">
+                            <label for="descripcion">Descripción *</label>
+                            <input type="text" class="form-control" id="descripcion" name="descripcion" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="precio">Precio *</label>
+                            <input type="number" class="form-control" id="precio" name="precio" step="0.01" min="0" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="stock">Stock *</label>
+                            <input type="number" class="form-control" id="stock" name="stock" min="0" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success" id="btnSubmit">
+                            <i class="fas fa-save"></i> Guardar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    
+    <script>
+        function editarProducto(id, descripcion, precio, stock) {
+            $('#modalTitle').text('Editar Producto');
+            $('#formProducto').attr('action', '/productos/editar/' + id);
+            $('#producto_id').val(id);
+            $('#descripcion').val(descripcion);
+            $('#precio').val(precio);
+            $('#stock').val(stock);
+            $('#btnSubmit').html('<i class="fas fa-save"></i> Actualizar');
+            $('#modalProducto').modal('show');
+        }
+
+        $('#modalProducto').on('hidden.bs.modal', function () {
+            $('#modalTitle').text('Agregar Producto');
+            $('#formProducto').attr('action', '{{ url_for("agregar_producto") }}');
+            $('#formProducto')[0].reset();
+            $('#producto_id').val('');
+            $('#btnSubmit').html('<i class="fas fa-save"></i> Guardar');
+        });
+    </script>
 </body>
 </html>
