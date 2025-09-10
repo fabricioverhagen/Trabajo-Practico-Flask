@@ -6,6 +6,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='productos.css') }}">
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -228,26 +229,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-    
-    <script>
-        function editarProducto(id, descripcion, precio, stock) {
-            $('#modalTitle').text('Editar Producto');
-            $('#formProducto').attr('action', '/productos/editar/' + id);
-            $('#producto_id').val(id);
-            $('#descripcion').val(descripcion);
-            $('#precio').val(precio);
-            $('#stock').val(stock);
-            $('#btnSubmit').html('<i class="fas fa-save"></i> Actualizar');
-            $('#modalProducto').modal('show');
-        }
-
-        $('#modalProducto').on('hidden.bs.modal', function () {
-            $('#modalTitle').text('Agregar Producto');
-            $('#formProducto').attr('action', '{{ url_for("agregar_producto") }}');
-            $('#formProducto')[0].reset();
-            $('#producto_id').val('');
-            $('#btnSubmit').html('<i class="fas fa-save"></i> Guardar');
-        });
-    </script>
+    <script src="{{ url_for('static', filename='productos.js') }}"></script>
 </body>
 </html>
