@@ -280,6 +280,10 @@ def eliminar_producto(id):
     
     return redirect(url_for('gestion_productos'))
 
+#----------------------------------------------------- Configuracion ------------------------------------------------------
+@app.route("/dashboard/configuracion", methods=["GET"])
+def ver_configuracion():
+    return render_template("configuracion.html")
 #---------------------------------------------------------------------------------------------------------------------- 
 
 
