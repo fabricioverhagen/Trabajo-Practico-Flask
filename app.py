@@ -38,6 +38,15 @@ def get_dashboard_data():
         except:
             stats['productos_stock'] = 0
             stats['stock_bajo'] = 0
+        
+        # Ventas del día
+        hoy = datetime.now().strftime("%Y-%m-%d")
+        stats['ventas_hoy'] = conn.execute('SELECT COUNT(*) as count FROM facturas WHERE DATE(fecha) = ?', (hoy,)).fetchone()['count']
+        stats['total_dia'] = conn.execute('SELECT SUM(total) as total FROM facturas WHERE DATE(fecha) = ?', (hoy,)).fetchone()['total']
+        if stats['total_dia'] is None:
+            stats['total_dia'] = 0
+        else:
+            stats['total_dia'] = round(stats['total_dia'], 2)
             
     except Exception as e:
         print(f"Error obteniendo estadísticas: {e}")
