@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Listado de Facturas</title>
+    <title>Detalle Factura #{{ factura.id_factura }}</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
@@ -95,13 +95,14 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Listado de Facturas</h1>
+                            <h1 class="m-0">Detalle de Factura #{{ factura.id_factura }}</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item">Ventas</li>
-                                <li class="breadcrumb-item active">Facturas</li>
+                                <li class="breadcrumb-item"><a href="{{ url_for('listado_facturas') }}">Facturas</a></li>
+                                <li class="breadcrumb-item active">Detalle</li>
                             </ol>
                         </div>
                     </div>
@@ -113,52 +114,53 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-file-invoice mr-1"></i>
-                                Facturas Registradas
+                                <i class="fas fa-info-circle mr-1"></i>
+                                Información General
                             </h3>
-                            <div class="card-tools">
-                                <a href="{{ url_for('ventas') }}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-plus"></i> Nueva Venta
-                                </a>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <p><strong>Cliente:</strong> {{ factura.cliente if factura.cliente else 'Venta rápida' }}</p>
+                                    <p><strong>Fecha:</strong> {{ factura.fecha }}</p>
+                                </div>
+                                <div class="col-md-6 text-right">
+                                    <h4>Total: ${{ "%.2f"|format(factura.total) }}</h4>
+                                </div>
                             </div>
                         </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="card-title">
+                                <i class="fas fa-list-ul mr-1"></i>
+                                Productos
+                            </h3>
+                        </div>
                         <div class="card-body p-0">
-                            {% if facturas %}
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover m-0">
+                                <table class="table table-bordered table-striped m-0">
                                     <thead>
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Fecha</th>
-                                            <th>Cliente</th>
-                                            <th>Total</th>
-                                            <th>Acciones</th>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unitario</th>
+                                            <th>Subtotal</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {% for f in facturas %}
+                                        {% for d in detalles %}
                                         <tr>
-                                            <td>{{ f.id_factura }}</td>
-                                            <td>{{ f.fecha }}</td>
-                                            <td>{{ f.cliente if f.cliente else 'Venta rápida' }}</td>
-                                            <td>${{ "%.2f"|format(f.total) }}</td>
-                                            <td>
-                                                <a href="{{ url_for('detalle_factura', id=f.id_factura) }}" class="btn btn-sm btn-info">
-                                                    <i class="fas fa-eye"></i> Ver detalle
-                                                </a>
-                                            </td>
+                                            <td>{{ d.descripcion }}</td>
+                                            <td>{{ d.cantidad }}</td>
+                                            <td>${{ "%.2f"|format(d.precio_unitario) }}</td>
+                                            <td>${{ "%.2f"|format(d.subtotal) }}</td>
                                         </tr>
                                         {% endfor %}
                                     </tbody>
                                 </table>
                             </div>
-                            {% else %}
-                            <div class="text-center py-4">
-                                <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
-                                <h4 class="text-muted">No hay facturas registradas</h4>
-                                <p class="text-muted">Comienza registrando tu primera venta</p>
-                            </div>
-                            {% endif %}
                         </div>
                     </div>
                 </div>

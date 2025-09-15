@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Listado de Facturas</title>
+    <title>Nueva Venta</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
@@ -62,7 +62,7 @@
                                 <p>Clientes</p>
                             </a>
                         </li>
-                        <li class="nav-item menu-open">
+                        <li class="nav-item">
                             <a href="#" class="nav-link active">
                                 <i class="nav-icon fas fa-cash-register"></i>
                                 <p>
@@ -72,13 +72,13 @@
                             </a>
                             <ul class="nav nav-treeview">
                                 <li class="nav-item">
-                                    <a href="{{ url_for('ventas') }}" class="nav-link">
+                                    <a href="{{ url_for('ventas') }}" class="nav-link active">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Nueva Venta</p>
                                     </a>
                                 </li>
                                 <li class="nav-item">
-                                    <a href="{{ url_for('listado_facturas') }}" class="nav-link active">
+                                    <a href="{{ url_for('listado_facturas') }}" class="nav-link">
                                         <i class="far fa-circle nav-icon"></i>
                                         <p>Facturas</p>
                                     </a>
@@ -95,13 +95,13 @@
                 <div class="container-fluid">
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Listado de Facturas</h1>
+                            <h1 class="m-0">Nueva Venta</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
                                 <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
                                 <li class="breadcrumb-item">Ventas</li>
-                                <li class="breadcrumb-item active">Facturas</li>
+                                <li class="breadcrumb-item active">Nueva Venta</li>
                             </ol>
                         </div>
                     </div>
@@ -113,53 +113,47 @@
                     <div class="card">
                         <div class="card-header">
                             <h3 class="card-title">
-                                <i class="fas fa-file-invoice mr-1"></i>
-                                Facturas Registradas
+                                <i class="fas fa-shopping-cart mr-1"></i>
+                                Detalles de la Venta
                             </h3>
-                            <div class="card-tools">
-                                <a href="{{ url_for('ventas') }}" class="btn btn-primary btn-sm">
-                                    <i class="fas fa-plus"></i> Nueva Venta
-                                </a>
-                            </div>
                         </div>
-                        <div class="card-body p-0">
-                            {% if facturas %}
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover m-0">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Fecha</th>
-                                            <th>Cliente</th>
-                                            <th>Total</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {% for f in facturas %}
-                                        <tr>
-                                            <td>{{ f.id_factura }}</td>
-                                            <td>{{ f.fecha }}</td>
-                                            <td>{{ f.cliente if f.cliente else 'Venta rápida' }}</td>
-                                            <td>${{ "%.2f"|format(f.total) }}</td>
-                                            <td>
-                                                <a href="{{ url_for('detalle_factura', id=f.id_factura) }}" class="btn btn-sm btn-info">
-                                                    <i class="fas fa-eye"></i> Ver detalle
-                                                </a>
-                                            </td>
-                                        </tr>
+                        <form method="post">
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="id_cliente">Cliente (opcional):</label>
+                                    <select class="form-control" id="id_cliente" name="id_cliente">
+                                        <option value="">Venta rápida (sin cliente)</option>
+                                        {% for c in clientes %}
+                                        <option value="{{ c.id_cliente }}">{{ c.nombre }}</option>
                                         {% endfor %}
-                                    </tbody>
-                                </table>
+                                    </select>
+                                </div>
+
+                                <h4>Productos</h4>
+                                <div id="productos">
+                                    <div class="form-row align-items-center mb-2">
+                                        <div class="col-8">
+                                            <select class="form-control" name="producto[]">
+                                                {% for p in productos %}
+                                                <option value="{{ p.id_producto }}">{{ p.descripcion }} - ${{ "%.2f"|format(p.precio) }} (Stock: {{ p.stock }})</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <div class="col-4">
+                                            <input type="number" class="form-control" name="cantidad[]" value="1" min="1">
+                                        </div>
+                                    </div>
+                                </div>
+                                <button type="button" class="btn btn-primary btn-sm mt-2" onclick="agregarProducto()">
+                                    <i class="fas fa-plus"></i> Agregar otro producto
+                                </button>
                             </div>
-                            {% else %}
-                            <div class="text-center py-4">
-                                <i class="fas fa-receipt fa-3x text-muted mb-3"></i>
-                                <h4 class="text-muted">No hay facturas registradas</h4>
-                                <p class="text-muted">Comienza registrando tu primera venta</p>
+                            <div class="card-footer">
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-check"></i> Confirmar Venta
+                                </button>
                             </div>
-                            {% endif %}
-                        </div>
+                        </form>
                     </div>
                 </div>
             </section>
@@ -169,5 +163,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+
+    <script>
+    function agregarProducto() {
+        let div = document.createElement("div");
+        div.className = "form-row align-items-center mb-2";
+        div.innerHTML = `
+            <div class="col-8">
+                <select class="form-control" name="producto[]">
+                    {% for p in productos %}
+                    <option value="{{ p.id_producto }}">{{ p.descripcion }} - ${{ "%.2f"|format(p.precio) }} (Stock: {{ p.stock }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-4">
+                <input type="number" class="form-control" name="cantidad[]" value="1" min="1">
+            </div>
+        `;
+        document.getElementById("productos").appendChild(div);
+    }
+    </script>
 </body>
 </html>

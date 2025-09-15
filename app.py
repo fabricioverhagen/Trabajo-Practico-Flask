@@ -1,4 +1,5 @@
-from flask import Flask, render_template,request,redirect,url_for,session,flash
+from flask import Flask, render_template,request,redirect,url_for,session,flash,jsonify
+from datetime import datetime
 import sqlite3
 import os
 
@@ -130,19 +131,15 @@ def login():
 @app.route('/dashboard',methods=['GET'])
 def dashboard():
     if "user" in session:
-        # Obtener datos reales para el dashboard
         stats = get_dashboard_data()
         productos_stock_bajo = get_productos_stock_bajo()
-        
-        
-        return render_template("dashboard.html", 
-                             nombre=session["user"],
-                             stats=stats,
-                             productos_stock_bajo=productos_stock_bajo)
+        return render_template("dashboard.html",
+                               nombre=session["user"],
+                               stats=stats,
+                               productos_stock_bajo=productos_stock_bajo)
     else:
         flash("Debes iniciar sesión para acceder al dashboard.", "warning")
         return redirect(url_for("login"))
-
 #----------------------------------------------------- Clientes ------------------------------------------------------
 
 @app.route('/dashboard/clientes', methods=['GET'])
@@ -203,7 +200,109 @@ def eliminar_cliente(id):
     # Redirige a 'gestion_clientes'
     return redirect(url_for('gestion_clientes'))
 
-#----------------------------------------------------- Productos ------------------------------------------------------
+#---------------------------------------------------------------------------------------------------------------------- 
+#--------------------------------------------------Ventas--------------------------------------------------------------------
+
+@app.route('/dashboard/ventas', methods=['GET', 'POST'])
+def ventas():
+    if request.method == 'POST':
+        id_cliente = request.form.get('id_cliente')  # Puede ser None o vacío
+        productos = request.form.getlist('producto[]')
+        cantidades = request.form.getlist('cantidad[]')
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        try:
+            # Crear factura (si no hay cliente, guardamos NULL)
+            fecha = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            if id_cliente == "" or id_cliente is None:
+                cursor.execute("INSERT INTO facturas (id_cliente, fecha, total) VALUES (NULL, ?, ?)", (fecha, 0))
+            else:
+                cursor.execute("INSERT INTO facturas (id_cliente, fecha, total) VALUES (?, ?, ?)", (id_cliente, fecha, 0))
+            id_factura = cursor.lastrowid
+
+            total_factura = 0
+
+            # Procesar productos
+            for i in range(len(productos)):
+                id_producto = int(productos[i])
+                cantidad = int(cantidades[i])
+
+                producto = cursor.execute("SELECT precio, stock FROM productos WHERE id_producto = ?", (id_producto,)).fetchone()
+
+                if not producto:
+                    conn.rollback()
+                    flash("Producto no encontrado.", "danger")
+                    return redirect(url_for('ventas'))
+
+                if producto['stock'] < cantidad:
+                    conn.rollback()
+                    flash(f"Stock insuficiente para el producto ID {id_producto}.", "danger")
+                    return redirect(url_for('ventas'))
+
+                precio_unitario = producto['precio']
+                subtotal = precio_unitario * cantidad
+                total_factura += subtotal
+
+                # Insertar en detalle
+                cursor.execute("""INSERT INTO detalle_factura 
+                                  (id_factura, id_producto, cantidad, precio_unitario, subtotal)
+                                  VALUES (?, ?, ?, ?, ?)""",
+                               (id_factura, id_producto, cantidad, precio_unitario, subtotal))
+
+                # Descontar stock
+                cursor.execute("UPDATE productos SET stock = stock - ? WHERE id_producto = ?", (cantidad, id_producto))
+
+            # Actualizar total de factura
+            cursor.execute("UPDATE facturas SET total = ? WHERE id_factura = ?", (total_factura, id_factura))
+
+            conn.commit()
+            flash("Venta registrada correctamente.", "success")
+        except Exception as e:
+            conn.rollback()
+            flash(f"Error al registrar la venta: {e}", "danger")
+        finally:
+            conn.close()
+
+        return redirect(url_for('listado_facturas'))
+
+    # Si es GET, cargamos clientes y productos para mostrar en el formulario
+    conn = get_db_connection()
+    clientes = conn.execute("SELECT * FROM clientes").fetchall()
+    productos = conn.execute("SELECT * FROM productos WHERE stock > 0").fetchall()
+    conn.close()
+    return render_template('ventas.html', clientes=clientes, productos=productos)
+
+
+@app.route('/dashboard/listado_facturas', methods=['GET'])
+def listado_facturas():
+    conn = get_db_connection()
+    facturas = conn.execute("""SELECT f.id_factura, f.fecha, f.total, c.nombre as cliente
+                               FROM facturas f
+                               LEFT JOIN clientes c ON f.id_cliente = c.id_cliente
+                               ORDER BY f.fecha DESC""").fetchall()
+    conn.close()
+    return render_template('listado_facturas.html', facturas=facturas)
+
+
+@app.route('/dashboard/factura/<int:id>')
+def detalle_factura(id):
+    conn = get_db_connection()
+    factura = conn.execute("""SELECT f.id_factura, f.fecha, f.total, c.nombre
+                              FROM facturas f
+                              LEFT JOIN clientes c ON f.id_cliente = c.id_cliente
+                              WHERE f.id_factura = ?""", (id,)).fetchone()
+    detalles = conn.execute("""SELECT d.cantidad, d.precio_unitario, d.subtotal, p.descripcion
+                               FROM detalle_factura d
+                               JOIN productos p ON d.id_producto = p.id_producto
+                               WHERE d.id_factura = ?""", (id,)).fetchall()
+    conn.close()
+    return render_template('detalle_factura.html', factura=factura, detalles=detalles)
+
+
+#------------------------------------------Productos---------------------------------------------------------------------------- 
+
 
 @app.route('/dashboard/gestion_productos', methods=['GET'])
 def gestion_productos():
@@ -288,17 +387,13 @@ def ver_configuracion():
 
 
 
-@app.route('/dashboard/emitir_factura', methods=['GET'])
-def emitir_factura():
-    return render_template('emitir_factura.html')
 
-@app.route('/dashboard/listado_facturas', methods=['GET'])
-def listado_facturas():
-    return render_template('listado_facturas.html')
 
 @app.route("/about")
 def about():
     return render_template("about.html")
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)
