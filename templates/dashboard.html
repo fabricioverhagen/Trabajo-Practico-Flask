@@ -14,6 +14,19 @@
     
     <!-- Tu CSS personalizado -->
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
+    <script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        let actualTheme = savedTheme === 'auto' ? 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : 
+            savedTheme;
+        
+        document.documentElement.setAttribute('data-theme', actualTheme);
+        if (document.body) {
+            document.body.classList.add(actualTheme + '-mode');
+        }
+    })();
+</script>
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -422,6 +435,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+
+    <script src="{{ url_for('static', filename='theme-global.js') }}"></script>
     
     <!-- Tu JavaScript personalizado -->
     <script src="{{ url_for('static', filename='dashboard.js') }}"></script>

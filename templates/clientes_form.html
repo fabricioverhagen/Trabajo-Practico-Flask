@@ -4,6 +4,21 @@
     <div class="card-header">
         <h3 class="card-title">{{ 'Editar Cliente' if cliente else 'Nuevo Cliente' }}</h3>
     </div>
+    <head>
+        <script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        let actualTheme = savedTheme === 'auto' ? 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : 
+            savedTheme;
+        
+        document.documentElement.setAttribute('data-theme', actualTheme);
+        if (document.body) {
+            document.body.classList.add(actualTheme + '-mode');
+        }
+    })();
+</script>
+    </head>
     <form method="post">
         <div class="card-body">
             <div class="form-group">
@@ -29,4 +44,5 @@
         </div>
     </form>
 </div>
+<script src="{{ url_for('static', filename='theme-global.js') }}"></script>
 {% endblock %}

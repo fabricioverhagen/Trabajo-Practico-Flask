@@ -9,6 +9,20 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='configuracion.css') }}">
+
+    <script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        let actualTheme = savedTheme === 'auto' ? 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : 
+            savedTheme;
+        
+        document.documentElement.setAttribute('data-theme', actualTheme);
+        if (document.body) {
+            document.body.classList.add(actualTheme + '-mode');
+        }
+    })();
+</script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -41,7 +55,7 @@
         </nav>
 
         <!-- Main Sidebar -->
-        <aside class="main-sidebar sidebar-dark-primary elevation-4">
+<aside class="main-sidebar elevation-4" style="background-color: var(--bg-color) !important; color: var(--text-color) !important;">
             <a href="{{ url_for('dashboard') }}" class="brand-link">
                 <i class="fas fa-store brand-image img-circle elevation-3"></i>
                 <span class="brand-text font-weight-light">Mi Kiosco</span>
@@ -256,5 +270,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
     <script src="{{ url_for('static', filename='configuracion.js') }}"></script>
+    <script src="{{ url_for('static', filename='theme-global.js') }}"></script>
+    
 </body>
 </html>

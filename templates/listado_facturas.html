@@ -5,6 +5,20 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
+
+    <script>
+    (function() {
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        let actualTheme = savedTheme === 'auto' ? 
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : 
+            savedTheme;
+        
+        document.documentElement.setAttribute('data-theme', actualTheme);
+        if (document.body) {
+            document.body.classList.add(actualTheme + '-mode');
+        }
+    })();
+</script>
 </head>
 
 <body class="hold-transition sidebar-mini layout-fixed">
@@ -169,5 +183,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
+    <script src="{{ url_for('static', filename='theme-global.js') }}"></script>
 </body>
 </html>
