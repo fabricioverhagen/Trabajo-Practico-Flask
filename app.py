@@ -394,6 +394,66 @@ def ver_configuracion():
     return render_template("configuracion.html")
 #---------------------------------------------------------------------------------------------------------------------- 
 
+#----------------------------------------------------- chart ------------------------------------------------------
+
+@app.route('/api/ventas-chart-data')
+def ventas_chart_data():
+    """API para obtener datos de ventas para el gráfico"""
+    if "user" not in session:
+        return jsonify({'error': 'No autorizado'}), 401
+    
+    conn = get_db_connection()
+    
+    try:
+        # Obtener ventas de los últimos 7 días
+        query = '''
+        SELECT 
+            DATE(fecha) as fecha,
+            COALESCE(SUM(total), 0) as total_ventas
+        FROM facturas 
+        WHERE DATE(fecha) >= DATE('now', '-6 days')
+        GROUP BY DATE(fecha)
+        ORDER BY DATE(fecha)
+        '''
+        
+        ventas = conn.execute(query).fetchall()
+        
+        # Crear lista de los últimos 7 días
+        from datetime import datetime, timedelta
+        fechas = []
+        total_ventas = []
+        
+        # Generar los últimos 7 días
+        for i in range(6, -1, -1):
+            fecha = (datetime.now() - timedelta(days=i)).strftime('%Y-%m-%d')
+            dia_semana = (datetime.now() - timedelta(days=i)).strftime('%a')
+            fechas.append(dia_semana)
+            
+            # Buscar si hay ventas para esta fecha
+            venta_del_dia = next((v for v in ventas if v['fecha'] == fecha), None)
+            
+            if venta_del_dia:
+                total_ventas.append(float(venta_del_dia['total_ventas']))
+            else:
+                total_ventas.append(0.0)
+        
+        return jsonify({
+            'labels': fechas,
+            'data': total_ventas
+        })
+        
+    except Exception as e:
+        print(f"Error obteniendo datos de ventas: {e}")
+        # Devolver datos vacíos en caso de error
+        return jsonify({
+            'labels': ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+            'data': [0, 0, 0, 0, 0, 0, 0]
+        })
+    finally:
+        conn.close()
+
+#-----------------------------------------------------------------------------------------------------------
+
 
 
 
