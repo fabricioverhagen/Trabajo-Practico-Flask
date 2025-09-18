@@ -1,18 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Configuración - Mi Kiosco</title>
+    <title>{% block title %}Mi Kiosco{% endblock %}</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/css/adminlte.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='dashboard.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='configuracion.css') }}">
+    {% block extra_css %}{% endblock %}
     
     <!-- Script de tema global (cargar antes que jQuery para evitar flash) -->
     <script>
-        // Aplicar tema inmediatamente
         (function() {
             const savedTheme = localStorage.getItem('theme') || 'light';
             let actualTheme = savedTheme;
@@ -82,37 +81,37 @@
                 <nav class="mt-2">
                     <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                         <li class="nav-item">
-                            <a href="{{ url_for('dashboard') }}" class="nav-link">
+                            <a href="{{ url_for('dashboard') }}" class="nav-link {% block nav_dashboard %}{% endblock %}">
                                 <i class="nav-icon fas fa-tachometer-alt"></i>
                                 <p>Dashboard</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('gestion_productos') }}" class="nav-link">
+                            <a href="{{ url_for('gestion_productos') }}" class="nav-link {% block nav_productos %}{% endblock %}">
                                 <i class="nav-icon fas fa-box"></i>
                                 <p>Productos</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('gestion_clientes') }}" class="nav-link">
+                            <a href="{{ url_for('gestion_clientes') }}" class="nav-link {% block nav_clientes %}{% endblock %}">
                                 <i class="nav-icon fas fa-users"></i>
                                 <p>Clientes</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('emitir_factura') }}" class="nav-link">
+                            <a href="{{ url_for('ventas') }}" class="nav-link {% block nav_ventas %}{% endblock %}">
                                 <i class="nav-icon fas fa-file-invoice"></i>
                                 <p>Emitir Factura</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('listado_facturas') }}" class="nav-link">
+                            <a href="{{ url_for('listado_facturas') }}" class="nav-link {% block nav_facturas %}{% endblock %}">
                                 <i class="nav-icon fas fa-list-alt"></i>
                                 <p>Facturas</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('ver_configuracion') }}" class="nav-link active">
+                            <a href="{{ url_for('ver_configuracion') }}" class="nav-link {% block nav_configuracion %}{% endblock %}">
                                 <i class="nav-icon fas fa-cogs"></i>
                                 <p>Configuración</p>
                             </a>
@@ -127,24 +126,27 @@
             <!-- Content Header -->
             <div class="content-header">
                 <div class="container-fluid">
+                    {% block content_header %}
                     <div class="row mb-2">
                         <div class="col-sm-6">
-                            <h1 class="m-0">Configuración</h1>
+                            <h1 class="m-0">{% block page_title %}Mi Kiosco{% endblock %}</h1>
                         </div>
                         <div class="col-sm-6">
                             <ol class="breadcrumb float-sm-right">
+                                {% block breadcrumb %}
                                 <li class="breadcrumb-item"><a href="{{ url_for('dashboard') }}">Dashboard</a></li>
-                                <li class="breadcrumb-item active">Configuración</li>
+                                <li class="breadcrumb-item active">Página</li>
+                                {% endblock %}
                             </ol>
                         </div>
                     </div>
+                    {% endblock %}
                 </div>
             </div>
 
             <!-- Main content -->
             <section class="content">
                 <div class="container-fluid">
-                    
                     <!-- Mensajes Flash -->
                     {% with messages = get_flashed_messages(with_categories=true) %}
                         {% if messages %}
@@ -159,154 +161,8 @@
                         {% endif %}
                     {% endwith %}
 
-                    <div class="row">
-                        <!-- Configuración de Tema -->
-                        <div class="col-lg-6 col-12">
-                            <div class="card card-primary">
-                                <div class="card-header">
-                                    <h3 class="card-title">
-                                        <i class="fas fa-palette mr-2"></i>
-                                        Tema de la Aplicación
-                                    </h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="form-group">
-                                        <label for="theme-selector">Seleccionar Tema</label>
-                                        <div class="theme-options mt-3">
-                                            <div class="custom-control custom-radio mb-3">
-                                                <input class="custom-control-input" type="radio" id="theme-light" name="theme" value="light" checked>
-                                                <label for="theme-light" class="custom-control-label">
-                                                    <i class="fas fa-sun text-warning mr-2"></i>
-                                                    Tema Claro
-                                                    <small class="d-block text-muted">Fondo blanco con texto oscuro</small>
-                                                </label>
-                                            </div>
-                                            <div class="custom-control custom-radio mb-3">
-                                                <input class="custom-control-input" type="radio" id="theme-dark" name="theme" value="dark">
-                                                <label for="theme-dark" class="custom-control-label">
-                                                    <i class="fas fa-moon text-info mr-2"></i>
-                                                    Tema Oscuro
-                                                    <small class="d-block text-muted">Fondo oscuro con texto claro</small>
-                                                </label>
-                                            </div>
-                                            <div class="custom-control custom-radio mb-3">
-                                                <input class="custom-control-input" type="radio" id="theme-auto" name="theme" value="auto">
-                                                <label for="theme-auto" class="custom-control-label">
-                                                    <i class="fas fa-adjust text-secondary mr-2"></i>
-                                                    Automático
-                                                    <small class="d-block text-muted">Sigue la configuración del sistema</small>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="mt-4">
-                                        <h6 class="text-muted">Vista Previa:</h6>
-                                        <div class="theme-preview p-3 border rounded">
-                                            <div class="preview-navbar bg-primary text-white p-2 rounded mb-2">
-                                                <i class="fas fa-store mr-2"></i>
-                                                Mi Kiosco
-                                            </div>
-                                            <div class="preview-content">
-                                                <div class="d-flex justify-content-between align-items-center mb-2">
-                                                    <span class="preview-text">Productos</span>
-                                                    <span class="badge badge-success preview-badge">24</span>
-                                                </div>
-                                                <div class="d-flex justify-content-between align-items-center">
-                                                    <span class="preview-text">Clientes</span>
-                                                    <span class="badge badge-info preview-badge">12</span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer">
-                                    <button type="button" class="btn btn-primary" id="apply-theme">
-                                        <i class="fas fa-check"></i> Aplicar Tema
-                                    </button>
-                                    <button type="button" class="btn btn-secondary ml-2" id="reset-theme">
-                                        <i class="fas fa-undo"></i> Restaurar
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Información del Tema -->
-                        <div class="col-lg-6 col-12">
-                            <div class="card card-info">
-                                <div class="card-header">
-                                    <h3 class="card-title">
-                                        <i class="fas fa-info-circle mr-2"></i>
-                                        Información del Tema
-                                    </h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="info-item mb-3">
-                                        <strong>Tema Actual:</strong>
-                                        <span id="current-theme-name" class="ml-2 badge badge-warning">Claro</span>
-                                    </div>
-                                    
-                                    <div class="info-item mb-3">
-                                        <strong>Última Modificación:</strong>
-                                        <span id="theme-last-change" class="ml-2 text-muted">-</span>
-                                    </div>
-
-                                    <div class="mt-4">
-                                        <h6>Características del Tema:</h6>
-                                        <ul class="list-unstyled" id="theme-features">
-                                            <li><i class="fas fa-check text-success mr-2"></i> Fácil lectura</li>
-                                            <li><i class="fas fa-check text-success mr-2"></i> Colores contrastantes</li>
-                                            <li><i class="fas fa-check text-success mr-2"></i> Optimizado para pantallas</li>
-                                            <li><i class="fas fa-check text-success mr-2"></i> Clásico y profesional</li>
-                                        </ul>
-                                    </div>
-
-                                    <div class="mt-4">
-                                        <div class="alert alert-info">
-                                            <i class="fas fa-lightbulb mr-2"></i>
-                                            <strong>Consejo:</strong> El tema automático cambia según la hora del día o la configuración de tu sistema.
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Acceso Rápido -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="card card-secondary">
-                                <div class="card-header">
-                                    <h3 class="card-title">
-                                        <i class="fas fa-bolt mr-2"></i>
-                                        Acceso Rápido
-                                    </h3>
-                                </div>
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-4 col-6 mb-3">
-                                            <button class="btn btn-outline-primary btn-block" onclick="quickToggleTheme()">
-                                                <i class="fas fa-adjust mr-2"></i>
-                                                Alternar Tema
-                                            </button>
-                                        </div>
-                                        <div class="col-md-4 col-6 mb-3">
-                                            <button class="btn btn-outline-secondary btn-block" onclick="exportSettings()">
-                                                <i class="fas fa-download mr-2"></i>
-                                                Exportar Config
-                                            </button>
-                                        </div>
-                                        <div class="col-md-4 col-12 mb-3">
-                                            <button class="btn btn-outline-info btn-block" onclick="showSystemInfo()">
-                                                <i class="fas fa-info mr-2"></i>
-                                                Info del Sistema
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    {% block content %}
+                    {% endblock %}
                 </div>
             </section>
         </div>
@@ -316,95 +172,18 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/4.6.2/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/admin-lte@3.2/dist/js/adminlte.min.js"></script>
-    
-    <!-- Script global de tema -->
     <script src="{{ url_for('static', filename='theme-global.js') }}"></script>
-    
-    <!-- Script específico de configuración -->
-    <script src="{{ url_for('static', filename='configuracion.js') }}"></script>
     
     <script>
-        // Funciones adicionales para acceso rápido
-        function quickToggleTheme() {
+        function toggleThemeQuick() {
             const currentTheme = localStorage.getItem('theme') || 'light';
             const newTheme = currentTheme === 'light' ? 'dark' : 'light';
-            
-            // Actualizar radio button
-            $(`input[name="theme"][value="${newTheme}"]`).prop('checked', true);
-            
-            // Aplicar tema
-            applyTheme(newTheme);
-            showThemeChangeMessage(newTheme);
-        }
-        
-        function toggleThemeQuick() {
-            quickToggleTheme();
-        }
-        
-        function exportSettings() {
-            const settings = {
-                theme: localStorage.getItem('theme') || 'light',
-                themeLastChange: localStorage.getItem('theme-last-change') || null,
-                exportDate: new Date().toISOString(),
-                version: '1.0'
-            };
-            
-            const dataStr = JSON.stringify(settings, null, 2);
-            const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-            
-            const exportFileDefaultName = 'mi-kiosco-configuracion.json';
-            
-            const linkElement = document.createElement('a');
-            linkElement.setAttribute('href', dataUri);
-            linkElement.setAttribute('download', exportFileDefaultName);
-            linkElement.click();
-            
-            // Mostrar mensaje
-            const alertHtml = `
-                <div class="alert alert-success alert-dismissible fade show">
-                    <i class="fas fa-download mr-2"></i>
-                    <strong>¡Configuración exportada!</strong> Se ha descargado el archivo de configuración.
-                    <button type="button" class="close" data-dismiss="alert">
-                        <span>&times;</span>
-                    </button>
-                </div>
-            `;
-            $('.container-fluid').prepend(alertHtml);
-        }
-        
-        function showSystemInfo() {
-            const info = {
-                userAgent: navigator.userAgent,
-                platform: navigator.platform,
-                language: navigator.language,
-                colorScheme: window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light',
-                screenResolution: screen.width + 'x' + screen.height,
-                currentTheme: localStorage.getItem('theme') || 'light',
-                localStorageSupport: typeof(Storage) !== "undefined"
-            };
-            
-            let infoHtml = '<h6>Información del Sistema:</h6><ul class="list-unstyled small">';
-            for (const [key, value] of Object.entries(info)) {
-                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
-                infoHtml += `<li><strong>${label}:</strong> ${value}</li>`;
-            }
-            infoHtml += '</ul>';
-            
-            // Mostrar en un alert
-            const alertHtml = `
-                <div class="alert alert-info alert-dismissible fade show">
-                    <i class="fas fa-info-circle mr-2"></i>
-                    <strong>Información del Sistema</strong>
-                    <br><br>
-                    ${infoHtml}
-                    <button type="button" class="close" data-dismiss="alert">
-                        <span>&times;</span>
-                    </button>
-                </div>
-            `;
-            $('.container-fluid').prepend(alertHtml);
+            localStorage.setItem('theme', newTheme);
+            location.reload();
         }
     </script>
-    <script src="{{ url_for('static', filename='theme-global.js') }}"></script>
+    
+    {% block scripts %}
+    {% endblock %}
 </body>
 </html>
