@@ -2,6 +2,7 @@ from flask import Flask, render_template,request,redirect,url_for,session,flash,
 from datetime import datetime
 import sqlite3
 import os
+from functools import wraps
 
 
 app = Flask(__name__)
@@ -83,11 +84,29 @@ def get_productos_stock_bajo():
     return productos
 
 
+# Decorador para controlar roles
+def requires_roles(*roles):
+    def decorator(f):
+        @wraps(f)
+        def wrapped(*args, **kwargs):
+            if "user" not in session:
+                flash("Debes iniciar sesión.", "warning")
+                return redirect(url_for("login"))
+            role = session.get("role", "")
+            if role not in roles:
+                flash("No tienes permisos para acceder a esta página.", "danger")
+                return redirect(url_for("dashboard"))
+            return f(*args, **kwargs)
+        return wrapped
+    return decorator
+
+
 
 #----------------------------------------------------- Autenticacion ------------------------------------------------------
 
 @app.route("/")
 def home():
+    # Al iniciar la app, enviamos al login por defecto
     return redirect(url_for("login"))
 
 @app.route("/register", methods=["GET", "POST"])
@@ -96,7 +115,9 @@ def register():
         nombre = request.form["nombre"]
         email = request.form["email"]
         password = request.form["password"]
-        rol = "usuario"
+        rol = request.form.get("rol", "usuario")
+        if rol not in ("usuario", "admin"):
+            rol = "usuario"
 
         conn = get_db_connection()
         try:
@@ -128,6 +149,12 @@ def login():
 
         if user:
             session["user"] = user["nombre"]
+            # Guardar rol si existe en la fila devuelta
+            try:
+                session["role"] = user["rol"]
+            except Exception:
+                # En sqlite3.Row, se accede igual que a dict; si falla, dejamos role vacío
+                session["role"] = ""
             return redirect(url_for("dashboard"))
         else:
             flash("Email o contraseña incorrectos.", "danger")
@@ -152,6 +179,7 @@ def dashboard():
 #----------------------------------------------------- Clientes ------------------------------------------------------
 
 @app.route('/dashboard/clientes', methods=['GET'])
+@requires_roles('admin')
 def gestion_clientes():
     conn = get_db_connection()
     clientes = conn.execute('SELECT * FROM clientes').fetchall()
@@ -159,6 +187,7 @@ def gestion_clientes():
     return render_template('gestion_clientes.html', clientes=clientes)
 
 @app.route('/dashboard/clientes/agregar_clientes', methods=['GET', 'POST'])
+@requires_roles('admin')
 def agregar_clientes():
     if request.method == 'POST':
         nombre = request.form['nombre']
@@ -176,6 +205,7 @@ def agregar_clientes():
     return render_template('clientes_form.html')
 
 @app.route('/dashboard/clientes/editar/<int:id>', methods=['GET', 'POST'])
+@requires_roles('admin')
 def editar_cliente(id):
     conn = get_db_connection()
     cliente = conn.execute('SELECT * FROM clientes WHERE id_cliente = ?', (id,)).fetchone()
@@ -199,6 +229,7 @@ def editar_cliente(id):
 
 # La ruta para eliminar cliente
 @app.route('/clientes/eliminar/<int:id>', methods=['POST'])
+@requires_roles('admin')
 def eliminar_cliente(id):
     conn = get_db_connection()
     # Usa 'id_cliente' en la consulta SQL
@@ -213,6 +244,7 @@ def eliminar_cliente(id):
 #--------------------------------------------------Ventas--------------------------------------------------------------------
 
 @app.route('/dashboard/ventas', methods=['GET', 'POST'])
+@requires_roles('admin', 'usuario')
 def ventas():
     if request.method == 'POST':
         id_cliente = request.form.get('id_cliente')  # Puede ser None o vacío
@@ -285,17 +317,41 @@ def ventas():
 
 
 @app.route('/dashboard/listado_facturas', methods=['GET'])
+@requires_roles('admin', 'usuario')
 def listado_facturas():
+    q = request.args.get('q', '').strip()
+    fecha = request.args.get('fecha', '').strip()
+
     conn = get_db_connection()
-    facturas = conn.execute("""SELECT f.id_factura, f.fecha, f.total, c.nombre as cliente
-                               FROM facturas f
-                               LEFT JOIN clientes c ON f.id_cliente = c.id_cliente
-                               ORDER BY f.fecha DESC""").fetchall()
+    params = []
+    where_clauses = []
+
+    if fecha:
+        where_clauses.append("DATE(f.fecha) = ?")
+        params.append(fecha)
+
+    if q:
+        where_clauses.append("c.nombre LIKE ?")
+        params.append(f"%{q}%")
+
+    base_query = """
+        SELECT f.id_factura, f.fecha, f.total, c.nombre as cliente
+        FROM facturas f
+        LEFT JOIN clientes c ON f.id_cliente = c.id_cliente
+    """
+
+    if where_clauses:
+        base_query += " WHERE " + " AND ".join(where_clauses)
+
+    base_query += " ORDER BY f.fecha DESC"
+
+    facturas = conn.execute(base_query, params).fetchall()
     conn.close()
     return render_template('listado_facturas.html', facturas=facturas)
 
 
 @app.route('/dashboard/factura/<int:id>')
+@requires_roles('admin', 'usuario')
 def detalle_factura(id):
     conn = get_db_connection()
     factura = conn.execute("""SELECT f.id_factura, f.fecha, f.total, c.nombre
@@ -314,6 +370,7 @@ def detalle_factura(id):
 
 
 @app.route('/dashboard/gestion_productos', methods=['GET'])
+@requires_roles('admin')
 def gestion_productos():
     if "user" not in session:
         flash("Debes iniciar sesión para acceder.", "warning")
@@ -325,6 +382,7 @@ def gestion_productos():
     return render_template('gestion_productos.html', productos=productos)
 
 @app.route('/productos/agregar', methods=['POST'])
+@requires_roles('admin')
 def agregar_producto():
     if "user" not in session:
         flash("Debes iniciar sesión para acceder.", "warning")
@@ -348,6 +406,7 @@ def agregar_producto():
     return redirect(url_for('gestion_productos'))
 
 @app.route('/productos/editar/<int:id>', methods=['POST'])
+@requires_roles('admin')
 def editar_producto(id):
     if "user" not in session:
         flash("Debes iniciar sesión para acceder.", "warning")
@@ -371,6 +430,7 @@ def editar_producto(id):
     return redirect(url_for('gestion_productos'))
 
 @app.route('/productos/eliminar/<int:id>', methods=['POST'])
+@requires_roles('admin')
 def eliminar_producto(id):
     if "user" not in session:
         flash("Debes iniciar sesión para acceder.", "warning")

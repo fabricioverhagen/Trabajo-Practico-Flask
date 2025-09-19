@@ -86,29 +86,64 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('gestion_productos') }}" class="nav-link {% block nav_productos %}{% endblock %}">
+                        <li class="nav-item has-treeview {% block nav_productos_open %}{% endblock %}">
+                            <a href="#" class="nav-link {% block nav_productos %}{% endblock %}">
                                 <i class="nav-icon fas fa-box"></i>
-                                <p>Productos</p>
+                                <p>
+                                    Productos
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ url_for('gestion_productos') }}" class="nav-link {% block nav_productos_gestion %}{% endblock %}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Gestión Productos</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url_for('ventas') }}" class="nav-link {% block nav_ventas %}{% endblock %}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Emitir Factura</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url_for('listado_facturas') }}" class="nav-link {% block nav_facturas_cliente %}{% endblock %}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Facturas</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('gestion_clientes') }}" class="nav-link {% block nav_clientes %}{% endblock %}">
+
+                        <li class="nav-item has-treeview {% block nav_clientes_open %}{% endblock %}">
+                            <a href="#" class="nav-link {% block nav_clientes %}{% endblock %}">
                                 <i class="nav-icon fas fa-users"></i>
-                                <p>Clientes</p>
+                                <p>
+                                    Clientes
+                                    <i class="right fas fa-angle-left"></i>
+                                </p>
                             </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('ventas') }}" class="nav-link {% block nav_ventas %}{% endblock %}">
-                                <i class="nav-icon fas fa-file-invoice"></i>
-                                <p>Emitir Factura</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="{{ url_for('listado_facturas') }}" class="nav-link {% block nav_facturas %}{% endblock %}">
-                                <i class="nav-icon fas fa-list-alt"></i>
-                                <p>Facturas</p>
-                            </a>
+                            <ul class="nav nav-treeview">
+                                <li class="nav-item">
+                                    <a href="{{ url_for('gestion_clientes') }}" class="nav-link {% block nav_clientes_gestion %}{% endblock %}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Gestión Clientes</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url_for('ventas') }}" class="nav-link {% block nav_ventas_cliente %}{% endblock %}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Emitir Factura</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url_for('listado_facturas') }}" class="nav-link {% block nav_facturas %}{% endblock %}">
+                                        <i class="far fa-circle nav-icon"></i>
+                                        <p>Facturas</p>
+                                    </a>
+                                </li>
+                            </ul>
                         </li>
                         <li class="nav-item">
                             <a href="{{ url_for('ver_configuracion') }}" class="nav-link {% block nav_configuracion %}{% endblock %}">

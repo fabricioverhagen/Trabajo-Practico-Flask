@@ -137,6 +137,18 @@
                             </div>
                         </div>
                         <div class="card-body p-0">
+                            <div class="p-3">
+                                <form method="get" action="{{ url_for('listado_facturas') }}" class="form-inline">
+                                    <div class="form-group mr-2">
+                                        <input type="text" name="q" class="form-control" placeholder="Buscar por cliente" value="{{ request.args.get('q','') }}">
+                                    </div>
+                                    <div class="form-group mr-2">
+                                        <input type="date" name="fecha" class="form-control" value="{{ request.args.get('fecha','') }}">
+                                    </div>
+                                    <button type="submit" class="btn btn-secondary">Buscar</button>
+                                    <a href="{{ url_for('listado_facturas') }}" class="btn btn-link">Limpiar</a>
+                                </form>
+                            </div>
                             {% if facturas %}
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover m-0">
