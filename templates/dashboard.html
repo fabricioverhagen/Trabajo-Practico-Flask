@@ -225,21 +225,48 @@
                                 <div class="card-header">
                                     <h3 class="card-title">
                                         <i class="fas fa-trophy mr-1"></i>
-                                        Top Productos
+                                        Top Productos (30 días)
                                     </h3>
                                 </div>
                                 <div class="card-body p-0">
+                                    {% if top_productos %}
+                                    <div class="table-responsive">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>Producto</th>
+                                                    <th class="text-center">Vendido</th>
+                                                    <th class="text-right">Total</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for producto in top_productos %}
+                                                <tr>
+                                                    <td>
+                                                        <div class="user-block">
+                                                            <span class="username">{{ producto.descripcion }}</span>
+                                                            <span class="description">${{ "%.2f"|format(producto.precio) }}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <span class="badge badge-info">{{ producto.total_vendido }}</span>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span class="text-success font-weight-bold">${{ "%.2f"|format(producto.total_ingresos) }}</span>
+                                                    </td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    {% else %}
                                     <div class="p-3 text-center text-muted">
                                         <i class="fas fa-box fa-3x mb-3"></i>
                                         <p>Aún no hay datos de ventas</p>
                                         <small>Los productos más vendidos aparecerán aquí cuando tengas ventas registradas</small>
                                     </div>
+                                    {% endif %}
                                 </div>
-                                <div class="card-footer text-center">
-                                    <a href="{{ url_for('gestion_productos') }}" class="uppercase">Ver Todos los Productos</a>
-                                </div>
-                            </div>
-                        </div>
                                 <div class="card-footer text-center">
                                     <a href="{{ url_for('gestion_productos') }}" class="uppercase">Ver Todos los Productos</a>
                                 </div>
@@ -248,7 +275,6 @@
                     </div>
 
                     <div class="row">
-                        <!-- Productos con Stock Bajo -->
                         <!-- Productos con Stock Bajo -->
                         <div class="col-md-6">
                             <div class="card">
@@ -311,15 +337,60 @@
                                     </h3>
                                 </div>
                                 <div class="card-body">
+                                    {% if ultimas_ventas %}
+                                    <div class="timeline">
+                                        {% for venta in ultimas_ventas %}
+                                        <div class="time-label">
+                                            <span class="bg-green">{{ venta.fecha[:10] }}</span>
+                                        </div>
+                                        <div>
+                                            <i class="fas fa-receipt bg-info"></i>
+                                            <div class="timeline-item">
+                                                <span class="time">
+                                                    <i class="fas fa-clock"></i> {{ venta.fecha[11:16] }}
+                                                </span>
+                                                <h3 class="timeline-header">
+                                                    <a href="{{ url_for('detalle_factura', id=venta.id_factura) }}">
+                                                        Factura #{{ venta.id_factura }}
+                                                    </a>
+                                                    - {{ venta.cliente_nombre }}
+                                                </h3>
+                                                <div class="timeline-body">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <small class="text-muted">Items: {{ venta.cantidad_items }}</small>
+                                                        </div>
+                                                        <div class="col-6 text-right">
+                                                            <strong class="text-success">${{ "%.2f"|format(venta.total) }}</strong>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="timeline-footer">
+                                                    <a href="{{ url_for('detalle_factura', id=venta.id_factura) }}" class="btn btn-primary btn-sm">
+                                                        Ver Detalle
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endfor %}
+                                        <div>
+                                            <i class="fas fa-clock bg-gray"></i>
+                                        </div>
+                                    </div>
+                                    {% else %}
                                     <div class="text-center text-muted py-4">
                                         <i class="fas fa-receipt fa-3x mb-3"></i>
                                         <h5 class="text-muted">No hay ventas registradas</h5>
-                                        <p class="text-muted mb-0">Las ventas aparecerán aquí cuando implementes el sistema de facturación</p>
+                                        <p class="text-muted mb-0">Las ventas aparecerán aquí cuando realices transacciones</p>
                                     </div>
+                                    {% endif %}
                                 </div>
                                 <div class="card-footer">
                                     <a href="{{ url_for('ventas') }}" class="btn btn-sm btn-success">
                                         <i class="fas fa-plus"></i> Nueva Venta
+                                    </a>
+                                    <a href="{{ url_for('listado_facturas') }}" class="btn btn-sm btn-info ml-2">
+                                        <i class="fas fa-list"></i> Ver Todas
                                     </a>
                                 </div>
                             </div>

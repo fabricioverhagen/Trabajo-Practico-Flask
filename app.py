@@ -83,6 +83,64 @@ def get_productos_stock_bajo():
     
     return productos
 
+def get_top_productos():
+    """Obtiene los productos más vendidos"""
+    conn = get_db_connection()
+    productos = []
+    
+    try:
+        query = '''
+        SELECT 
+            p.descripcion,
+            p.precio,
+            SUM(d.cantidad) as total_vendido,
+            SUM(d.subtotal) as total_ingresos
+        FROM detalle_factura d
+        JOIN productos p ON d.id_producto = p.id_producto
+        JOIN facturas f ON d.id_factura = f.id_factura
+        WHERE DATE(f.fecha) >= DATE('now', '-30 days')
+        GROUP BY p.id_producto, p.descripcion, p.precio
+        ORDER BY total_vendido DESC
+        LIMIT 5
+        '''
+        productos = conn.execute(query).fetchall()
+    except Exception as e:
+        print(f"Error obteniendo productos más vendidos: {e}")
+        productos = []
+    finally:
+        conn.close()
+    
+    return productos
+
+def get_ultimas_ventas():
+    """Obtiene las últimas ventas registradas"""
+    conn = get_db_connection()
+    ventas = []
+    
+    try:
+        query = '''
+        SELECT 
+            f.id_factura,
+            f.fecha,
+            f.total,
+            COALESCE(c.nombre, 'Cliente Anónimo') as cliente_nombre,
+            COUNT(d.id_detalle) as cantidad_items
+        FROM facturas f
+        LEFT JOIN clientes c ON f.id_cliente = c.id_cliente
+        LEFT JOIN detalle_factura d ON f.id_factura = d.id_factura
+        GROUP BY f.id_factura, f.fecha, f.total, c.nombre
+        ORDER BY f.fecha DESC
+        LIMIT 5
+        '''
+        ventas = conn.execute(query).fetchall()
+    except Exception as e:
+        print(f"Error obteniendo últimas ventas: {e}")
+        ventas = []
+    finally:
+        conn.close()
+    
+    return ventas
+
 
 # Decorador para controlar roles
 def requires_roles(*roles):
@@ -169,10 +227,15 @@ def dashboard():
     if "user" in session:
         stats = get_dashboard_data()
         productos_stock_bajo = get_productos_stock_bajo()
+        top_productos = get_top_productos()
+        ultimas_ventas = get_ultimas_ventas()
+        
         return render_template("dashboard.html",
                                nombre=session["user"],
                                stats=stats,
-                               productos_stock_bajo=productos_stock_bajo)
+                               productos_stock_bajo=productos_stock_bajo,
+                               top_productos=top_productos,
+                               ultimas_ventas=ultimas_ventas)
     else:
         flash("Debes iniciar sesión para acceder al dashboard.", "warning")
         return redirect(url_for("login"))
