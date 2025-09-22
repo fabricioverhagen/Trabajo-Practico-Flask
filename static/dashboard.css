@@ -1,598 +1,71 @@
-/* Estilos para configuración - Sistema completo de temas */
+/* AdminLTE ya incluye la mayoría de estilos, pero aquí van tus personalizaciones */
 
-/* Variables CSS para temas */
-:root {
-    --bg-color: #ffffff;
-    --text-color: #495057;
-    --card-bg: #ffffff;
-    --border-color: #dee2e6;
-    --sidebar-bg: #f8f9fa;
-    --navbar-bg: #ffffff;
-    --input-bg: #ffffff;
-    --input-border: #ced4da;
-    --dropdown-bg: #ffffff;
+/* Estilos personalizados para el dashboard */
+.brand-image {
+    opacity: 0.8;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
-[data-theme="dark"] {
-    --bg-color: #1a1a1a;
-    --text-color: #e9ecef;
-    --card-bg: #2d2d2d;
-    --border-color: #495057;
-    --sidebar-bg: #343a40;
-    --navbar-bg: #2d2d2d;
-    --input-bg: #3a3a3a;
-    --input-border: #495057;
-    --dropdown-bg: #2d2d2d;
+.small-box .inner h3 {
+    font-size: 38px;
+    font-weight: bold;
+    margin: 0 0 10px 0;
+    white-space: nowrap;
+    padding: 0;
 }
 
-/* Forzar colores específicos para el navbar en tema oscuro */
-[data-theme="dark"] .main-header.navbar {
-    background-color: #2d2d2d !important;
-    border-bottom: 1px solid #495057 !important;
-}
-
-[data-theme="dark"] .main-header.navbar .nav-link {
-    color: #e9ecef !important;
-}
-
-[data-theme="dark"] .main-header.navbar .nav-link:hover {
-    color: #007bff !important;
-}
-
-[data-theme="dark"] .main-header.navbar .dropdown-menu {
-    background-color: #2d2d2d !important;
-    border-color: #495057 !important;
-}
-
-[data-theme="dark"] .main-header.navbar .dropdown-item {
-    color: #e9ecef !important;
-}
-
-[data-theme="dark"] .main-header.navbar .dropdown-item:hover {
-    background-color: #495057 !important;
-    color: #e9ecef !important;
-}
-
-/* Sidebar específico para temas */
-.main-sidebar {
-    background-color: var(--sidebar-bg) !important;
-    transition: all 0.3s ease;
-}
-
-/* Sidebar tema claro */
-[data-theme="light"] .main-sidebar {
-    background-color: #f8f9fa !important;
-}
-
-[data-theme="light"] .main-sidebar .sidebar-dark-primary {
-    background-color: #f8f9fa !important;
-}
-
-[data-theme="light"] .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link {
-    color: #495057 !important;
-}
-
-[data-theme="light"] .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
-    background-color: #007bff !important;
-    color: #ffffff !important;
-}
-
-[data-theme="light"] .brand-link {
-    background-color: #e9ecef !important;
-    color: #495057 !important;
-}
-
-[data-theme="light"] .brand-text {
-    color: #495057 !important;
-}
-
-/* Sidebar tema oscuro */
-[data-theme="dark"] .main-sidebar {
-    background-color: #343a40 !important;
-}
-
-[data-theme="dark"] .sidebar-dark-primary {
-    background-color: #343a40 !important;
-}
-
-[data-theme="dark"] .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link {
-    color: #c2c7d0 !important;
-}
-
-[data-theme="dark"] .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
-    background-color: #007bff !important;
-    color: #ffffff !important;
-}
-
-[data-theme="dark"] .brand-link {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-[data-theme="dark"] .brand-text {
-    color: #c2c7d0 !important;
-}
-
-/* Aplicar variables a elementos */
-body {
-    background-color: var(--bg-color);
-    color: var(--text-color);
-    transition: all 0.3s ease;
-}
-
-.content-wrapper {
-    background-color: var(--bg-color);
-    transition: all 0.3s ease;
-}
-
-.main-header.navbar {
-    background-color: var(--navbar-bg) !important;
-    border-bottom: 1px solid var(--border-color);
-    transition: all 0.3s ease;
-}
-
-.main-header.navbar .nav-link {
-    color: var(--text-color) !important;
-}
-
-/* Asegurar que el navbar sea visible en todos los temas */
-[data-theme="dark"] .navbar-white {
-    background-color: var(--navbar-bg) !important;
-}
-
-[data-theme="dark"] .navbar-light .navbar-nav .nav-link {
-    color: var(--text-color) !important;
-}
-
-[data-theme="dark"] .navbar-light .navbar-nav .nav-link:hover,
-[data-theme="dark"] .navbar-light .navbar-nav .nav-link:focus {
-    color: #007bff !important;
-}
-
-/* Dropdown en navbar oscuro */
-[data-theme="dark"] .navbar-light .navbar-nav .dropdown-menu {
-    background-color: var(--dropdown-bg);
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .navbar-light .navbar-nav .dropdown-item {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .navbar-light .navbar-nav .dropdown-item:hover {
-    background-color: var(--border-color);
-    color: var(--text-color);
-}
-
-/* Cards personalizadas */
-.card {
-    border: none;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: all 0.3s ease;
-    margin-bottom: 2rem;
-    background-color: var(--card-bg);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .card {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-}
-
-.card:hover {
+.info-box:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-}
-
-[data-theme="dark"] .card:hover {
-    box-shadow: 0 8px 25px rgba(0,0,0,0.4);
-}
-
-.card-primary .card-header {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    color: white;
-    border-bottom: 3px solid #004085;
-    border-radius: 12px 12px 0 0;
-}
-
-.card-info .card-header {
-    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
-    color: white;
-    border-bottom: 3px solid #117a8b;
-    border-radius: 12px 12px 0 0;
-}
-
-.card-secondary .card-header {
-    background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
-    color: white;
-    border-bottom: 3px solid #495057;
-    border-radius: 12px 12px 0 0;
-}
-
-.card-title {
-    margin-bottom: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-}
-
-.card-title i {
-    margin-right: 0.5rem;
-}
-
-/* Opciones de tema */
-.theme-options {
-    max-width: 400px;
-}
-
-.custom-control-label {
-    font-weight: 500;
-    cursor: pointer;
-    padding-left: 0.5rem;
-    color: var(--text-color);
-}
-
-.custom-control-label small {
-    font-weight: 400;
-    margin-top: 0.25rem;
-    color: #6c757d;
-}
-
-[data-theme="dark"] .custom-control-label small {
-    color: #adb5bd;
-}
-
-.custom-control-input:checked ~ .custom-control-label::before {
-    background-color: #007bff;
-    border-color: #007bff;
-}
-
-/* Vista previa del tema */
-.theme-preview {
-    background-color: var(--card-bg);
-    border: 2px solid var(--border-color) !important;
     transition: all 0.3s ease;
-    min-height: 120px;
 }
 
-.preview-navbar {
-    font-weight: 600;
-    font-size: 0.9rem;
+/* Estilos para el gráfico */
+#ventasChart {
+    max-height: 400px;
 }
 
-.preview-content {
-    color: var(--text-color);
+/* Personalización de tablas */
+.table-sm th,
+.table-sm td {
+    padding: 0.5rem;
+    vertical-align: middle;
 }
 
-.preview-text {
-    font-weight: 500;
-}
-
-.preview-badge {
-    font-size: 0.75rem;
-}
-
-/* Botones mejorados */
-.btn {
-    border-radius: 8px;
-    font-weight: 600;
-    padding: 0.6rem 1.5rem;
-    transition: all 0.3s ease;
-    border: 2px solid transparent;
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
-
-.btn-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-    border-color: #007bff;
-}
-
-.btn-secondary {
-    background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
-    border-color: #6c757d;
-}
-
-/* Información del tema */
-.info-item {
-    display: flex;
-    align-items: center;
-    padding: 0.5rem 0;
-    border-bottom: 1px solid var(--border-color);
-}
-
-.info-item:last-child {
-    border-bottom: none;
-}
-
-.info-item strong {
-    min-width: 150px;
-    color: var(--text-color);
-}
-
-/* Badges para tema actual */
-.badge {
-    font-size: 0.75rem;
-    padding: 0.5rem 0.75rem;
-    border-radius: 6px;
-    font-weight: 600;
-}
-
-.badge-primary {
-    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
-}
-
-.badge-dark {
-    background: linear-gradient(135deg, #343a40 0%, #23272b 100%);
-}
-
-.badge-secondary {
-    background: linear-gradient(135deg, #6c757d 0%, #545b62 100%);
+/* Badges personalizados */
+.badge-danger {
+    background-color: #dc3545;
 }
 
 .badge-warning {
-    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+    background-color: #ffc107;
     color: #212529;
 }
 
-/* Lista de características */
-.list-unstyled li {
-    padding: 0.25rem 0;
-    color: var(--text-color);
+.badge-info {
+    background-color: #17a2b8;
 }
 
-/* Alertas */
-.alert {
-    border: none;
-    border-radius: 10px;
-    padding: 1rem 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+/* Cards hover effect */
+.card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
-.alert-info {
-    background: linear-gradient(135deg, #d1ecf1 0%, #bee5eb 100%);
-    color: #0c5460;
-    border-left: 4px solid #17a2b8;
-}
-
-.alert-success {
-    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-    color: #155724;
-    border-left: 4px solid #28a745;
-}
-
-/* Breadcrumb personalizado */
-.breadcrumb {
-    background: none;
-    padding: 0;
-    margin: 0;
-    border-radius: 0;
-}
-
-.breadcrumb-item {
-    font-weight: 500;
-}
-
-.breadcrumb-item + .breadcrumb-item::before {
-    content: ">";
-    color: #6c757d;
-    font-weight: bold;
-}
-
-.breadcrumb-item a {
-    color: #007bff;
-    text-decoration: none;
-    transition: color 0.2s ease;
-}
-
-.breadcrumb-item a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-.breadcrumb-item.active {
-    color: var(--text-color);
-    font-weight: 600;
-}
-
-/* Content header */
-.content-header {
-    padding: 15px 0.5rem 0;
-}
-
-.content-header h1 {
-    font-size: 2rem;
-    font-weight: 700;
-    color: var(--text-color);
-    margin: 0;
-}
-
-/* Formularios en tema oscuro */
-[data-theme="dark"] .form-control {
-    background-color: var(--input-bg);
-    border-color: var(--input-border);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .form-control:focus {
-    background-color: var(--input-bg);
-    border-color: #007bff;
-    color: var(--text-color);
-    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-}
-
-[data-theme="dark"] .form-control::placeholder {
-    color: #6c757d;
-}
-
-/* Dropdown en tema oscuro */
-[data-theme="dark"] .dropdown-menu {
-    background-color: var(--dropdown-bg);
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .dropdown-item {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .dropdown-item:hover {
-    background-color: var(--border-color);
-    color: var(--text-color);
-}
-
-/* Tabla en tema oscuro */
-[data-theme="dark"] .table {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .table td,
-[data-theme="dark"] .table th {
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .table thead th {
-    border-color: var(--border-color);
-}
-
-/* Modal en tema oscuro */
-[data-theme="dark"] .modal-content {
-    background-color: var(--card-bg);
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .modal-header {
-    border-color: var(--border-color);
-}
-
-[data-theme="dark"] .modal-footer {
-    border-color: var(--border-color);
-}
-
-/* Animaciones para cambio de tema */
-.theme-transition {
-    transition: all 0.3s ease-in-out;
-}
-
-/* Estado de carga */
-.loading {
-    opacity: 0.6;
-    pointer-events: none;
-}
-
-.loading .btn {
-    position: relative;
-}
-
-.loading .btn::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 16px;
-    height: 16px;
-    margin: -8px 0 0 -8px;
-    border: 2px solid transparent;
-    border-top: 2px solid currentColor;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-/* Tema oscuro específico */
-[data-theme="dark"] .navbar-light {
-    background-color: var(--navbar-bg) !important;
-    border-color: var(--border-color) !important;
-}
-
-[data-theme="dark"] .navbar-light .navbar-nav .nav-link {
-    color: var(--text-color) !important;
-}
-
-[data-theme="dark"] .alert-info {
-    background: linear-gradient(135deg, #1e3a40 0%, #2c5a63 100%);
-    color: #b8dadf;
-    border-left-color: #17a2b8;
-}
-
-[data-theme="dark"] .alert-success {
-    background: linear-gradient(135deg, #1e4a2a 0%, #2d5a3d 100%);
-    color: #b8e6c1;
-    border-left-color: #28a745;
-}
-
-/* Nav sidebar en tema oscuro */
-[data-theme="dark"] .nav-sidebar > .nav-item > .nav-link {
-    color: var(--text-color);
-}
-
-[data-theme="dark"] .nav-sidebar > .nav-item > .nav-link.active {
-    background-color: rgba(0, 123, 255, 0.2);
-    color: #007bff;
-}
-
-/* Responsive */
+/* Small boxes responsive */
 @media (max-width: 768px) {
-    .content-header h1 {
-        font-size: 1.5rem;
+    .small-box .inner h3 {
+        font-size: 28px;
     }
     
-    .card-body {
-        padding: 1rem;
-    }
-    
-    .btn {
-        padding: 0.5rem 1rem;
-        font-size: 0.9rem;
-    }
-    
-    .theme-options {
-        max-width: 100%;
-    }
-    
-    .info-item {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .info-item strong {
-        min-width: auto;
-        margin-bottom: 0.25rem;
+    .small-box .inner p {
+        font-size: 14px;
     }
 }
 
-/* Mejoras de accesibilidad */
-.btn:focus,
-.custom-control-input:focus ~ .custom-control-label::before {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
-}
-
-/* Efectos de hover para mejor UX */
-.custom-control-label:hover {
-    color: #007bff;
-}
-
-.custom-control-label:hover i {
-    transform: scale(1.1);
-    transition: transform 0.2s ease;
-}
-
-/* Indicador de tema activo */
-.custom-control-input:checked ~ .custom-control-label {
-    color: #007bff;
-    font-weight: 600;
-}
-
-.custom-control-input:checked ~ .custom-control-label i {
-    transform: scale(1.2);
-}
-
-/* Transiciones suaves para todos los elementos */
-* {
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+/* Info boxes responsive */
+@media (max-width: 576px) {
+    .info-box {
+        margin-bottom: 1rem;
+    }
 }

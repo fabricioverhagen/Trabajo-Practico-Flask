@@ -6,7 +6,7 @@
     --text-color: #495057;
     --card-bg: #ffffff;
     --border-color: #dee2e6;
-    --sidebar-bg: #343a40;
+    --sidebar-bg: #f8f9fa;
     --navbar-bg: #ffffff;
     --input-bg: #ffffff;
     --input-border: #ced4da;
@@ -18,7 +18,7 @@
     --text-color: #e9ecef;
     --card-bg: #2d2d2d;
     --border-color: #495057;
-    --sidebar-bg: #1a1a1a;
+    --sidebar-bg: #343a40;
     --navbar-bg: #2d2d2d;
     --input-bg: #3a3a3a;
     --input-border: #495057;
@@ -51,6 +51,65 @@
 [data-theme="dark"] .main-header.navbar .dropdown-item:hover {
     background-color: #495057 !important;
     color: #e9ecef !important;
+}
+
+/* Sidebar específico para temas */
+.main-sidebar {
+    background-color: var(--sidebar-bg) !important;
+    transition: all 0.3s ease;
+}
+
+/* Sidebar tema claro */
+[data-theme="light"] .main-sidebar {
+    background-color: #f8f9fa !important;
+}
+
+[data-theme="light"] .main-sidebar .sidebar-dark-primary {
+    background-color: #f8f9fa !important;
+}
+
+[data-theme="light"] .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link {
+    color: #495057 !important;
+}
+
+[data-theme="light"] .sidebar-light-primary .nav-sidebar > .nav-item > .nav-link.active {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+[data-theme="light"] .brand-link {
+    background-color: #e9ecef !important;
+    color: #495057 !important;
+}
+
+[data-theme="light"] .brand-text {
+    color: #495057 !important;
+}
+
+/* Sidebar tema oscuro */
+[data-theme="dark"] .main-sidebar {
+    background-color: #343a40 !important;
+}
+
+[data-theme="dark"] .sidebar-dark-primary {
+    background-color: #343a40 !important;
+}
+
+[data-theme="dark"] .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link {
+    color: #c2c7d0 !important;
+}
+
+[data-theme="dark"] .sidebar-dark-primary .nav-sidebar > .nav-item > .nav-link.active {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+}
+
+[data-theme="dark"] .brand-link {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+[data-theme="dark"] .brand-text {
+    color: #c2c7d0 !important;
 }
 
 /* Aplicar variables a elementos */
@@ -102,11 +161,6 @@ body {
 [data-theme="dark"] .navbar-light .navbar-nav .dropdown-item:hover {
     background-color: var(--border-color);
     color: var(--text-color);
-}
-
-.main-sidebar {
-    background-color: var(--sidebar-bg) !important;
-    transition: all 0.3s ease;
 }
 
 /* Cards personalizadas */
@@ -469,15 +523,6 @@ body {
     background: linear-gradient(135deg, #1e4a2a 0%, #2d5a3d 100%);
     color: #b8e6c1;
     border-left-color: #28a745;
-}
-
-/* Sidebar brand en tema oscuro */
-[data-theme="dark"] .brand-link {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-}
-
-[data-theme="dark"] .brand-text {
-    color: var(--text-color) !important;
 }
 
 /* Nav sidebar en tema oscuro */
