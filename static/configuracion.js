@@ -1,4 +1,4 @@
-// JavaScript para configuración - Sistema completo de temas
+// JavaScript para configuración - Sistema de temas (Claro y Oscuro)
 
 $(document).ready(function() {
     // Inicializar configuración de temas
@@ -15,17 +15,6 @@ $(document).ready(function() {
  * Inicializar configuración de temas
  */
 function initThemeConfig() {
-    // Detectar preferencia del sistema
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Escuchar cambios en la preferencia del sistema
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        const currentTheme = localStorage.getItem('theme');
-        if (currentTheme === 'auto') {
-            applyTheme(e.matches ? 'dark' : 'light', false);
-        }
-    });
-    
     // Actualizar vista previa inicial
     updateThemePreview();
     updateThemeInfo();
@@ -64,15 +53,18 @@ function loadSavedTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
     const lastChange = localStorage.getItem('theme-last-change');
     
+    // Solo permitir temas válidos (light o dark)
+    const validTheme = (savedTheme === 'dark') ? 'dark' : 'light';
+    
     // Seleccionar radio button correspondiente
-    $(`input[name="theme"][value="${savedTheme}"]`).prop('checked', true);
+    $(`input[name="theme"][value="${validTheme}"]`).prop('checked', true);
     
     // Aplicar tema
-    applyThemeLogic(savedTheme);
+    applyThemeLogic(validTheme);
     
     // Actualizar información
-    updateThemeInfo(savedTheme, lastChange);
-    updateThemePreview(savedTheme);
+    updateThemeInfo(validTheme, lastChange);
+    updateThemePreview(validTheme);
 }
 
 /**
@@ -109,16 +101,8 @@ function applyThemeLogic(theme) {
     body.removeClass('dark-mode light-mode');
     html.removeAttr('data-theme');
     
-    let actualTheme = theme;
-    
-    // Si es automático, detectar preferencia del sistema
-    if (theme === 'auto') {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        actualTheme = prefersDark ? 'dark' : 'light';
-    }
-    
     // Aplicar tema
-    if (actualTheme === 'dark') {
+    if (theme === 'dark') {
         body.addClass('dark-mode');
         html.attr('data-theme', 'dark');
         updateAdminLTETheme('dark');
@@ -129,7 +113,7 @@ function applyThemeLogic(theme) {
     }
     
     // Actualizar navbar y sidebar para AdminLTE
-    updateAdminLTEColors(actualTheme);
+    updateAdminLTEColors(theme);
 }
 
 /**
@@ -190,16 +174,9 @@ function updateThemePreview(theme = null) {
     }
     
     const preview = $('.theme-preview');
-    let actualTheme = theme;
-    
-    // Si es automático, usar preferencia del sistema
-    if (theme === 'auto') {
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        actualTheme = prefersDark ? 'dark' : 'light';
-    }
     
     // Aplicar estilos a la vista previa
-    if (actualTheme === 'dark') {
+    if (theme === 'dark') {
         preview.css({
             'background-color': '#2d2d2d',
             'color': '#e9ecef',
@@ -227,14 +204,12 @@ function updateThemeInfo(theme = null, lastChange = null) {
     // Actualizar nombre del tema
     const themeNames = {
         'light': 'Claro',
-        'dark': 'Oscuro',
-        'auto': 'Automático'
+        'dark': 'Oscuro'
     };
     
     const themeBadgeClasses = {
         'light': 'badge-warning',
-        'dark': 'badge-dark',
-        'auto': 'badge-secondary'
+        'dark': 'badge-dark'
     };
     
     const currentThemeName = $('#current-theme-name');
@@ -258,30 +233,20 @@ function updateThemeFeatures(theme) {
     const features = $('#theme-features');
     let featuresHtml = '';
     
-    switch(theme) {
-        case 'dark':
-            featuresHtml = `
-                <li><i class="fas fa-check text-success mr-2"></i> Reduce el cansancio visual</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Ideal para ambientes oscuros</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Ahorra batería en pantallas OLED</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Diseño moderno y elegante</li>
-            `;
-            break;
-        case 'auto':
-            featuresHtml = `
-                <li><i class="fas fa-check text-success mr-2"></i> Se adapta al horario</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Sigue configuración del sistema</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Cambia automáticamente</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Máxima comodidad visual</li>
-            `;
-            break;
-        default: // light
-            featuresHtml = `
-                <li><i class="fas fa-check text-success mr-2"></i> Fácil lectura</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Colores contrastantes</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Optimizado para pantallas</li>
-                <li><i class="fas fa-check text-success mr-2"></i> Clásico y profesional</li>
-            `;
+    if (theme === 'dark') {
+        featuresHtml = `
+            <li><i class="fas fa-check text-success mr-2"></i> Reduce el cansancio visual</li>
+            <li><i class="fas fa-check text-success mr-2"></i> Ideal para ambientes oscuros</li>
+            <li><i class="fas fa-check text-success mr-2"></i> Ahorra batería en pantallas OLED</li>
+            <li><i class="fas fa-check text-success mr-2"></i> Diseño moderno y elegante</li>
+        `;
+    } else {
+        featuresHtml = `
+            <li><i class="fas fa-check text-success mr-2"></i> Fácil lectura</li>
+            <li><i class="fas fa-check text-success mr-2"></i> Colores contrastantes</li>
+            <li><i class="fas fa-check text-success mr-2"></i> Optimizado para pantallas</li>
+            <li><i class="fas fa-check text-success mr-2"></i> Clásico y profesional</li>
+        `;
     }
     
     features.html(featuresHtml);
@@ -293,8 +258,7 @@ function updateThemeFeatures(theme) {
 function showThemeChangeMessage(theme) {
     const themeNames = {
         'light': 'Claro',
-        'dark': 'Oscuro',
-        'auto': 'Automático'
+        'dark': 'Oscuro'
     };
     
     // Crear mensaje de éxito
@@ -362,7 +326,9 @@ function showLoading(show) {
  */
 function applyGlobalTheme() {
     const savedTheme = localStorage.getItem('theme') || 'light';
-    applyThemeLogic(savedTheme);
+    // Solo permitir temas válidos
+    const validTheme = (savedTheme === 'dark') ? 'dark' : 'light';
+    applyThemeLogic(validTheme);
 }
 
 // Exponer función global para usar en otras páginas
