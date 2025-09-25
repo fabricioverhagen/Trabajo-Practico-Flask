@@ -86,6 +86,18 @@
                                 <p>Dashboard</p>
                             </a>
                         </li>
+                        <li class="nav-item has-treeview {% block nav_ventas_open %}{% endblock %}">
+                                    <a href="{{ url_for('ventas') }}" class="nav-link {% block nav_ventas %}{% endblock %}">
+                                        <i class="nav-icon fas fa-cash-register"></i>
+                                        <p>Ventas</p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ url_for('listado_facturas') }}" class="nav-link {% block nav_facturas_cliente %}{% endblock %}">
+                                        <i class="nav-icon fas fa-file-invoice"></i>
+                                        <p>Facturas</p>
+                                    </a>
+                                </li>
                         <li class="nav-item has-treeview {% block nav_productos_open %}{% endblock %}">
                             <a href="#" class="nav-link {% block nav_productos %}{% endblock %}">
                                 <i class="nav-icon fas fa-box"></i>
@@ -101,18 +113,7 @@
                                         <p>Gestión Productos</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="{{ url_for('ventas') }}" class="nav-link {% block nav_ventas %}{% endblock %}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Emitir Factura</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url_for('listado_facturas') }}" class="nav-link {% block nav_facturas_cliente %}{% endblock %}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Facturas</p>
-                                    </a>
-                                </li>
+                                
                             </ul>
                         </li>
 
@@ -131,18 +132,7 @@
                                         <p>Gestión Clientes</p>
                                     </a>
                                 </li>
-                                <li class="nav-item">
-                                    <a href="{{ url_for('ventas') }}" class="nav-link {% block nav_ventas_cliente %}{% endblock %}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Emitir Factura</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="{{ url_for('listado_facturas') }}" class="nav-link {% block nav_facturas %}{% endblock %}">
-                                        <i class="far fa-circle nav-icon"></i>
-                                        <p>Facturas</p>
-                                    </a>
-                                </li>
+                                
                             </ul>
                         </li>
                         <li class="nav-item">
